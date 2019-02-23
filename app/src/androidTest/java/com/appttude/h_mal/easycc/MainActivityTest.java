@@ -24,7 +24,7 @@ public class MainActivityTest {
 
     @Test
     public void testViews(){
-        View view = mainActivity.findViewById(R.id.editText);
+        View view = mainActivity.findViewById(R.id.editTextSomething);
 
         assertNotNull(view);
     }
