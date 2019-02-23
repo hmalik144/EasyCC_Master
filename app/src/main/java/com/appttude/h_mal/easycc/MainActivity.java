@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        currencyOneEditText = (EditText) findViewById(R.id.editTextSomething);
+        currencyOneEditText = (EditText) findViewById(R.id.editText);
         currencyTwoEditText = (EditText) findViewById(R.id.editText2);
 
         currencyOne = (TextView) findViewById(R.id.currency_one);
