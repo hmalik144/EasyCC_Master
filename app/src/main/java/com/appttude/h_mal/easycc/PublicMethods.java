@@ -24,8 +24,6 @@ public class PublicMethods {
         s1 = s1.substring(0,3);
         s2 = s2.substring(0,3);
 
-        Log.i(TAG, "UriBuilder: " + s1 + "_" + s2);
-
         Uri baseUri = Uri.parse(URL);
         Uri.Builder builder = baseUri.buildUpon();
         builder.appendQueryParameter("q", s1 + "_" + s2)
