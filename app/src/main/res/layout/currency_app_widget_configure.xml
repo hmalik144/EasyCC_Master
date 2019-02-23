@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/whole_view">
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    style="@style/cardview_theme"
+                    android:layout_margin="11dp">
+
+                    <TextView
+                        android:id="@+id/currency_one"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:text="Currency One"
+                        android:textColor="@color/colour_five"
+                        android:textSize="18sp" />
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    style="@style/cardview_theme"
+                    android:layout_margin="11dp">
+
+                    <TextView
+                        android:id="@+id/currency_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:text="Currency Two"
+                        android:textColor="@color/colour_five"
+                        android:textSize="18sp" />
+                </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="22dp"
+            android:id="@+id/submit_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/whole_view"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colour_five"
+            android:text="Submit" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
