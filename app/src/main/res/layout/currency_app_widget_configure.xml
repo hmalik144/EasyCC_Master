@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_centerInParent="true"
-    android:layout_margin="10dp"
-    android:orientation="vertical">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.appttude.h_mal.easycc.mvvm.ui.widget.WidgetViewModel" />
+    </data>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        tools:context=".mvvm.ui.widget.CurrencyAppWidgetConfigureActivityKotlin">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/whole_view">
+            android:layout_centerInParent="true"
+            android:layout_margin="12dp">
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/whole_view">
+
+                <androidx.cardview.widget.CardView
                     style="@style/cardview_theme"
                     android:layout_margin="11dp">
 
@@ -29,14 +40,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="12dp"
-                        android:text="Currency One"
+                        android:onClick="@{viewmodel::selectCurrencyOnClick}"
+                        android:tag="top"
+                        android:text="@={viewmodel.rateIdFrom}"
                         android:textColor="@color/colour_five"
-                        android:textSize="18sp" />
-                </android.support.v7.widget.CardView>
+                        android:textSize="18sp"
+                        tools:text="Currency One" />
+                </androidx.cardview.widget.CardView>
 
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <androidx.cardview.widget.CardView
                     style="@style/cardview_theme"
                     android:layout_margin="11dp">
 
@@ -45,26 +58,31 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="12dp"
-                        android:text="Currency Two"
+                        android:onClick="@{viewmodel::selectCurrencyOnClick}"
+                        android:tag="bottom"
+                        android:text="@={viewmodel.rateIdTo}"
                         android:textColor="@color/colour_five"
-                        android:textSize="18sp" />
-                </android.support.v7.widget.CardView>
+                        android:textSize="18sp"
+                        tools:text="Currency Two" />
+                </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <TextView
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="22dp"
-            android:id="@+id/submit_widget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/whole_view"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/colour_five"
-            android:text="Submit" />
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:id="@+id/submit_widget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/whole_view"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colour_five"
+                android:onClick="@{viewmodel::submitSelectionOnClick}"
+                android:text="Submit" />
+
+        </RelativeLayout>
+
+
 
     </RelativeLayout>
-
-
-
-</RelativeLayout>
+</layout>

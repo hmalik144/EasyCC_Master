@@ -1,12 +1,12 @@
-package com.appttude.h_mal.easycc;
+package com.appttude.h_mal.easycc.legacy;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -24,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appttude.h_mal.easycc.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,11 +34,11 @@ import java.net.URL;
 
 import java.text.DecimalFormat;
 
-import static com.appttude.h_mal.easycc.PublicMethods.UriBuilder;
-import static com.appttude.h_mal.easycc.PublicMethods.createUrl;
-import static com.appttude.h_mal.easycc.PublicMethods.makeHttpRequest;
+import static com.appttude.h_mal.easycc.legacy.PublicMethods.UriBuilder;
+import static com.appttude.h_mal.easycc.legacy.PublicMethods.createUrl;
+import static com.appttude.h_mal.easycc.legacy.PublicMethods.makeHttpRequest;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivityJava extends AppCompatActivity {
 
     EditText currencyOneEditText;
     EditText currencyTwoEditText;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private String CURRENCY_ONE = "currency_one_pref";
     private String CURRENCY_TWO = "currency_two_pref";
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivityJava.class.getSimpleName();
 
     SharedPreferences pref;
 
@@ -63,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        currencyOneEditText = (EditText) findViewById(R.id.editText);
-        currencyTwoEditText = (EditText) findViewById(R.id.editText2);
+        currencyOneEditText = (EditText) findViewById(R.id.topInsertValue);
+        currencyTwoEditText = (EditText) findViewById(R.id.bottomInsertValues);
 
         currencyOne = (TextView) findViewById(R.id.currency_one);
         currencyTwo = (TextView) findViewById(R.id.currency_two);
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         currencyOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomDialogClass dialogClass = new CustomDialogClass(MainActivity.this,currencyOne);
+                CustomDialogClass dialogClass = new CustomDialogClass(MainActivityJava.this,currencyOne);
                 dialogClass.show();
             }
         });
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         currencyTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomDialogClass dialogClass = new CustomDialogClass(MainActivity.this,currencyTwo);
+                CustomDialogClass dialogClass = new CustomDialogClass(MainActivityJava.this,currencyTwo);
                 dialogClass.show();
             }
         });
@@ -223,15 +225,15 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
 
-            Log.e("MainActivity", "Problem parsing the JSON results", e);
+            Log.e("MainActivityJava", "Problem parsing the JSON results", e);
         }
         return conversionValue;
     }
 
-    protected class MyAsyncTask extends AsyncTask<String, Void, Double> {
+    class MyAsyncTask extends AsyncTask<String, Void, Double> {
 
         @Override
-        protected Double doInBackground(String... urlString) {
+        public Double doInBackground(String... urlString) {
             String jsonResponse = null;
 
             if (urlString.length < 1 || urlString[0] == null) {
@@ -271,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
             wholeView.setAlpha(1.0f);
 
             if (result == null){
-                Toast.makeText(MainActivity.this, "Failed to retrieve exchange rate", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivityJava.this, "Failed to retrieve exchange rate", Toast.LENGTH_SHORT).show();
             }else{
                 conversionRateOne = result;
             }

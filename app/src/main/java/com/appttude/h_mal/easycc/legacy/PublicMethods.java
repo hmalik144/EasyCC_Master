@@ -1,4 +1,4 @@
-package com.appttude.h_mal.easycc;
+package com.appttude.h_mal.easycc.legacy;
 
 import android.net.Uri;
 import android.util.Log;
@@ -20,7 +20,7 @@ public class PublicMethods {
     public PublicMethods() {
     }
 
-    static String UriBuilder(String s1, String s2){
+    public static String UriBuilder(String s1, String s2){
         s1 = s1.substring(0,3);
         s2 = s2.substring(0,3);
 
@@ -34,7 +34,7 @@ public class PublicMethods {
 
     }
 
-    static java.net.URL createUrl(String stringUrl) {
+    public static java.net.URL createUrl(String stringUrl) {
         URL url = null;
         try {
             url = new URL(stringUrl);
@@ -45,7 +45,7 @@ public class PublicMethods {
     }
 
 
-    static String makeHttpRequest(URL url) throws IOException {
+    public static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
         if (url == null) {

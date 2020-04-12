@@ -1,4 +1,4 @@
-package com.appttude.h_mal.easycc;
+package com.appttude.h_mal.easycc.legacy;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.appttude.h_mal.easycc.R;
 
 /**
  * The configuration screen for the {@link CurrencyAppWidget CurrencyAppWidget} AppWidget.
@@ -90,7 +92,7 @@ public class CurrencyAppWidgetConfigureActivity extends Activity {
 
     // Read the prefix from the SharedPreferences object for this widget.
     // If there is no preference saved, get the default from a resource
-    static String loadTitlePref(Context context, int appWidgetId, int item) {
+    public static String loadTitlePref(Context context, int appWidgetId, int item) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_" + item, null);
         if (titleValue != null) {

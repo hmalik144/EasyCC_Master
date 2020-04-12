@@ -1,4 +1,4 @@
-package com.appttude.h_mal.easycc;
+package com.appttude.h_mal.easycc.legacy;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -10,17 +10,19 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.appttude.h_mal.easycc.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
 
-import static com.appttude.h_mal.easycc.CurrencyAppWidgetConfigureActivity.loadTitlePref;
-import static com.appttude.h_mal.easycc.PublicMethods.UriBuilder;
-import static com.appttude.h_mal.easycc.PublicMethods.createUrl;
-import static com.appttude.h_mal.easycc.PublicMethods.makeHttpRequest;
-import static com.appttude.h_mal.easycc.PublicMethods.round;
+import static com.appttude.h_mal.easycc.legacy.CurrencyAppWidgetConfigureActivity.loadTitlePref;
+import static com.appttude.h_mal.easycc.legacy.PublicMethods.UriBuilder;
+import static com.appttude.h_mal.easycc.legacy.PublicMethods.createUrl;
+import static com.appttude.h_mal.easycc.legacy.PublicMethods.makeHttpRequest;
+import static com.appttude.h_mal.easycc.legacy.PublicMethods.round;
 
 /**
  * Implementation of App Widget functionality.
@@ -116,7 +118,7 @@ public class CurrencyAppWidget extends AppWidgetProvider {
             int backgroundColor = 0x000000; //background color (here black)
             views.setInt( R.id.widget_view, "setBackgroundColor", (int)(opacity * 0xFF) << 24 | backgroundColor);
 
-            Intent clickIntentTemplate = new Intent(context, MainActivity.class);
+            Intent clickIntentTemplate = new Intent(context, MainActivityJava.class);
 
             clickIntentTemplate.setAction(Intent.ACTION_MAIN);
             clickIntentTemplate.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -149,7 +151,7 @@ public class CurrencyAppWidget extends AppWidgetProvider {
 
             } catch (JSONException e) {
 
-                Log.e("MainActivity", "Problem parsing the JSON results", e);
+                Log.e("MainActivityJava", "Problem parsing the JSON results", e);
             }
             return conversionValue;
         }
