@@ -15,15 +15,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="6dp"
+            android:layout_margin="12dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/confirm_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_margin="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginBottom="24dp"
                 android:text="Create widget for AUDGBP?"
                 android:textColor="@color/colour_five" />
 
@@ -37,7 +39,11 @@
                     android:id="@+id/confirm_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textStyle="bold"
                     android:text="@android:string/yes"
                     android:textColor="@color/colour_five" />
 
@@ -46,6 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
+                    android:textStyle="bold"
                     android:text="@android:string/no"
                     android:textColor="@color/colour_five" />
 

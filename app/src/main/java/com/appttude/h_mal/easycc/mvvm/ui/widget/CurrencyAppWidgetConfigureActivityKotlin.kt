@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.databinding.CurrencyAppWidgetConfigureBinding
 import com.appttude.h_mal.easycc.mvvm.ui.app.RateListener
-import com.appttude.h_mal.easycc.utils.DisplayToast
+import com.appttude.h_mal.easycc.mvvm.utils.DisplayToast
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance

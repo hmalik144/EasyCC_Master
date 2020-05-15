@@ -7,5 +7,5 @@ class ResponseObject(
         @SerializedName("query")
         var query : Any,
         @SerializedName("results")
-        var results : Map<String, CurrencyObject>
+        var results : Map<String, CurrencyObject>?
 )

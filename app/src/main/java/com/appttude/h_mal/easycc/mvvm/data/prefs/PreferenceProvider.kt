@@ -32,11 +32,11 @@ class PreferenceProvider(
         ).apply()
     }
 
-    fun getConversionPair(): List<String?> {
+    fun getConversionPair(): Pair<String?, String?> {
         val s1 = getLastConversionOne()
         val s2 = getLastConversionTwo()
 
-        return listOf(s1,s2)
+        return Pair(s1,s2)
     }
 
     private fun getLastConversionOne(): String? {
@@ -57,11 +57,11 @@ class PreferenceProvider(
         ).apply()
     }
 
-    fun getWidgetConversionPair(id: Int): List<String?> {
+    fun getWidgetConversionPair(id: Int): Pair<String?, String?> {
         val s1 = getWidgetLastConversionOne(id)
         val s2 = getWidgetLastConversionTwo(id)
 
-        return listOf(s1,s2)
+        return Pair(s1, s2)
     }
 
     private fun getWidgetLastConversionOne(id: Int): String? {

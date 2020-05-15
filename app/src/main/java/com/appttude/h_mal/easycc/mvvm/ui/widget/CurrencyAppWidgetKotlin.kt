@@ -3,16 +3,16 @@ package com.appttude.h_mal.easycc.mvvm.ui.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
-import com.appttude.h_mal.easycc.legacy.MainActivityJava
 import com.appttude.h_mal.easycc.R
-import com.appttude.h_mal.easycc.mvvm.data.Repository.Repository
-import com.appttude.h_mal.easycc.mvvm.data.network.NetworkConnectionInterceptor
-import com.appttude.h_mal.easycc.mvvm.data.network.api.GetData
-import com.appttude.h_mal.easycc.mvvm.data.prefs.PreferenceProvider
+import com.appttude.h_mal.easycc.mvvm.data.repository.RepositoryImpl
+import com.appttude.h_mal.easycc.mvvm.ui.app.MainActivity
+import com.appttude.h_mal.easycc.mvvm.utils.transformIntToArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,34 +21,51 @@ import org.kodein.di.LateInitKodein
 import org.kodein.di.generic.instance
 import java.io.IOException
 
+
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in [CurrencyAppWidgetConfigureActivityKotlin]
  */
+private const val TAG = "CurrencyAppWidgetKotlin"
 class CurrencyAppWidgetKotlin : AppWidgetProvider()  {
 
+    //DI with kodein to use in CurrencyAppWidgetKotlin
     private val kodein = LateInitKodein()
-    private val repository : Repository by kodein.instance()
+    private val repository : RepositoryImpl by kodein.instance()
 
+    //update trigger either on timed update or from from first start
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        kodein.baseKodein = (context.applicationContext as KodeinAware).kodein
+        Log.i(TAG,"onUpdate() appWidgetIds = ${appWidgetIds.size}")
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        kodein.baseKodein = (context.applicationContext as KodeinAware).kodein
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
             repository.removeWidgetConversionPairs(appWidgetId)
         }
+        super.onDeleted(context, appWidgetIds)
     }
 
     override fun onEnabled(context: Context) {
-        kodein.baseKodein = (context.applicationContext as KodeinAware).kodein
         // Enter relevant functionality for when the first widget is created
+        AppWidgetManager.getInstance(context).apply {
+            val thisAppWidget = ComponentName(context.packageName, CurrencyAppWidgetKotlin::class.java.name)
+            val appWidgetIds = getAppWidgetIds(thisAppWidget)
+            onUpdate(context, this, appWidgetIds)
+        }
+        super.onEnabled(context)
+    }
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (context == null){ return }
+        kodein.baseKodein = (context.applicationContext as KodeinAware).kodein
+
+        super.onReceive(context, intent)
     }
 
     override fun onDisabled(context: Context) {
@@ -57,58 +74,75 @@ class CurrencyAppWidgetKotlin : AppWidgetProvider()  {
     }
 
 
-    fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-        //todo: get value from repository
+    private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         val stringList = repository.getWidgetConversionPairs(appWidgetId)
-        val s1 = stringList[0]
-        val s2 = stringList[1]
+        val s1 = stringList.first
+        val s2 = stringList.second
 
         // Construct the RemoteViews object
         val views = RemoteViews(context.packageName, R.layout.currency_app_widget)
-        views.setTextViewText(R.id.exchangeName, "Rates")
-        views.setTextViewText(R.id.exchangeRate, "not set")
 
-        //todo: async task to get rate
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val response = repository.getData(s1!!.substring(0,3),s2!!.substring(0,3))
 
-                response?.results?.iterator()?.next()?.value?.let {
+                response.results?.iterator()?.next()?.value?.let {
                     val titleString = "${it.fr}${it.to}"
                     views.setTextViewText(R.id.exchangeName, titleString)
                     views.setTextViewText(R.id.exchangeRate, it.value.toString())
                 }
             }catch (io : IOException){
+                Log.i("WidgetClass",io.message ?: "Failed")
                 Toast.makeText(context,io.message, Toast.LENGTH_LONG).show()
             }finally {
-                // Instruct the widget manager to update the widget
-                appWidgetManager.updateAppWidget(appWidgetId, views)
-
-                val opacity = 0.3f //opacity = 0: fully transparent, opacity = 1: no transparancy
-                val backgroundColor = 0x000000 //background color (here black)
-
-                views.setInt(R.id.widget_view, "setBackgroundColor", (opacity * 0xFF).toInt() shl 24 or backgroundColor)
-
-                val clickIntentTemplate = Intent(context, MainActivityJava::class.java).apply {
-                    action = Intent.ACTION_MAIN
-                    addCategory(Intent.CATEGORY_LAUNCHER)
-                    putExtra("parse_1", s1)
-                    putExtra("parse_2", s2)
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                setUpdateIntent(context, appWidgetId).let {
+                    //set the pending intent to the icon
+                    views.setImageViewResource(R.id.refresh_icon, R.drawable.ic_refresh_white_24dp)
+                    views.setOnClickPendingIntent(R.id.refresh_icon, it)
                 }
 
-                val configPendingIntent = PendingIntent.getActivity(context, 0, clickIntentTemplate, PendingIntent.FLAG_UPDATE_CURRENT)
+                val clickIntentTemplate = clickingIntent(context, s1, s2)
+
+                val configPendingIntent =
+                        PendingIntent.getActivity(
+                        context, appWidgetId, clickIntentTemplate,
+                        PendingIntent.FLAG_UPDATE_CURRENT)
+
                 views.setOnClickPendingIntent(R.id.widget_view, configPendingIntent)
+
+                // Instruct the widget manager to update the widget
+                appWidgetManager.updateAppWidget(appWidgetId, views)
             }
         }
 
     }
 
-    fun setupRepository(context: Context): Repository {
-        val networkInterceptor =  NetworkConnectionInterceptor(context)
-        val getData = GetData(networkInterceptor)
-        val prefs = PreferenceProvider(context)
-        return Repository(getData,prefs,context)
+    private fun setUpdateIntent(context: Context, appWidgetId: Int): PendingIntent? {
+        //Create update intent for refresh icon
+        val updateIntent = Intent(
+                context, CurrencyAppWidgetKotlin::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, transformIntToArray(appWidgetId))
+        }
+        //add previous intent to this pending intent
+        return PendingIntent.getBroadcast(
+                context,
+                appWidgetId,
+                updateIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    private fun clickingIntent(
+            context: Context,
+            s1: String?, s2: String?
+    ): Intent {
+        return Intent(context, MainActivity::class.java).apply {
+            action = Intent.ACTION_MAIN
+            addCategory(Intent.CATEGORY_LAUNCHER)
+            putExtra("parse_1", s1)
+            putExtra("parse_2", s2)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
     }
 }
 

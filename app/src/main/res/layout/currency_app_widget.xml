@@ -2,23 +2,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_view"
     android:layout_width="match_parent"
+    tools:layout_width="110dp"
     android:layout_height="72dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#4D000000">
 
-
-    <TextView
-        android:id="@+id/exchangeName"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="3dp"
         android:layout_weight="1"
-        android:autoSizeMaxTextSize="100sp"
-        android:autoSizeMinTextSize="8sp"
-        android:autoSizeStepGranularity="2sp"
-        android:autoSizeTextType="uniform"
-        android:gravity="center"
-        android:textColor="#ffffff"
-        tools:text="AUDGBP" />
+        android:layout_marginBottom="3dp">
+        <TextView
+            android:id="@+id/exchangeName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="6sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:textColor="#ffffff"
+            android:text="Rate not set"
+            tools:text="AUDGBP" />
+        <ImageView
+            android:id="@+id/refresh_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/ic_refresh_white_24dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/exchangeName"
+            android:adjustViewBounds="true"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/exchangeRate"
@@ -32,5 +47,5 @@
         android:gravity="center"
         android:textColor="#ffffff"
         android:textStyle="bold"
-        tools:text="0.56" />
+        tools:text="0.526462" />
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.appttude.h_mal.easycc.mvvm.data.network.api
 
 import com.appttude.h_mal.easycc.mvvm.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.mvvm.data.network.NetworkConnectionInterceptor
+import com.appttude.h_mal.easycc.mvvm.data.network.QueryInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -10,15 +11,17 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-interface GetData {
+interface CurrencyApi {
 
     companion object{
         operator fun invoke(
-                networkConnectionInterceptor: NetworkConnectionInterceptor
-        ) : GetData{
+                networkConnectionInterceptor: NetworkConnectionInterceptor,
+                queryInterceptor: QueryInterceptor
+        ) : CurrencyApi{
 
             val okkHttpclient = OkHttpClient.Builder()
                     .addNetworkInterceptor(networkConnectionInterceptor)
+                    .addInterceptor(queryInterceptor)
                     .build()
 
             return Retrofit.Builder()
@@ -26,11 +29,11 @@ interface GetData {
                     .baseUrl("https://free.currencyconverterapi.com/api/v3/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                    .create(GetData::class.java)
+                    .create(CurrencyApi::class.java)
         }
     }
 
     @GET("convert?")
-    suspend fun getCurrencyRate(@Query("q") currency: String, @Query("apiKey") api: String): Response<ResponseObject>
+    suspend fun getCurrencyRate(@Query("q") currency: String): Response<ResponseObject>
 
 }

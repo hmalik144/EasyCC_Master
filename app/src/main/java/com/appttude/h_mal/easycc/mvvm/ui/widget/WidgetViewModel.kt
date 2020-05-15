@@ -4,11 +4,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.appttude.h_mal.easycc.mvvm.data.Repository.Repository
+import com.appttude.h_mal.easycc.mvvm.data.repository.RepositoryImpl
 import com.appttude.h_mal.easycc.mvvm.ui.app.RateListener
 
 class WidgetViewModel(
-        private val repository: Repository
+        private val repository: RepositoryImpl
 ) : ViewModel(){
 
     var rateListener: RateListener? = null
@@ -22,10 +22,9 @@ class WidgetViewModel(
         appWidgetId = appId
         val widgetString = getWidgetStored(appId)
 
-        if (widgetString.isNotEmpty()){
-            rateIdFrom.value = widgetString[0]
-            rateIdTo.value = widgetString[1]
-        }
+        rateIdFrom.value = widgetString.first
+        rateIdTo.value = widgetString.second
+
     }
 
     fun selectCurrencyOnClick(view: View){
@@ -80,15 +79,5 @@ class WidgetViewModel(
 
     private fun String.trimToThree() = this.substring(0,3)
 
-    private fun arrayEntry(s: String?): String? {
-        val strings = repository.getArrayList()
-        var returnString: String? = strings[0]
-        for (string in strings) {
-            if (s == string.substring(0, 3)) {
-                returnString = string
-            }
-        }
-        return returnString
-    }
 
 }

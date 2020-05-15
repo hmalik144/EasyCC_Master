@@ -1,4 +1,4 @@
-package com.appttude.h_mal.easycc.utils
+package com.appttude.h_mal.easycc.mvvm.utils
 
 import android.content.Context
 import android.view.View
