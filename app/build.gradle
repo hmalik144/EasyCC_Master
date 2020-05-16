@@ -40,8 +40,6 @@ android {
     }
 }
 
-
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -81,10 +79,6 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.0-rc01"
     implementation "androidx.room:room-ktx:2.2.0-rc01"
     kapt "androidx.room:room-compiler:2.2.0-rc01"
-
-    implementation 'com.xwray:groupie:2.3.0'
-    implementation 'com.xwray:groupie-kotlin-android-extensions:2.3.0'
-    implementation 'com.xwray:groupie-databinding:2.3.0'
 
     implementation "androidx.preference:preference-ktx:1.1.0"
 
