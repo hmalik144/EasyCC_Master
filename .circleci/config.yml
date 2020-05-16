@@ -23,8 +23,6 @@ jobs:
       - run:
           name: Run UnitTest
           command: ./gradlew RepositoryNetworkTest
-          name: Run UnitTest
-          command: ./gradlew RepositoryStorageTest
           name: Run Tests
           command: ./gradlew lint test
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
