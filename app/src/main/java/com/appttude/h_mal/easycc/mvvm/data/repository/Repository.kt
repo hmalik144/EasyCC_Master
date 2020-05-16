@@ -5,7 +5,6 @@ import com.appttude.h_mal.easycc.mvvm.data.network.response.ResponseObject
 /**
  * Main entry point for accessing currency data.
  */
-
 interface Repository {
 
     suspend fun getData(fromCurrency: String, toCurrency: String): ResponseObject

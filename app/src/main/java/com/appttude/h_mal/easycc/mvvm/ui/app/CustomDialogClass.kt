@@ -7,14 +7,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.WindowManager
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import com.appttude.h_mal.easycc.R
 import kotlinx.android.synthetic.main.custom_dialog.*
 
 class CustomDialogClass(
         context: Context,
-        val textView: TextView,
-        val viewModel: MainViewModel
+        private val clickListener: ClickListener
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +22,11 @@ class CustomDialogClass(
         window!!.setBackgroundDrawableResource(android.R.color.transparent)
         window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        val arrayAdapter = ArrayAdapter.createFromResource(context, R.array.currency_arrays, android.R.layout.simple_list_item_1)
+        val arrayAdapter =
+                ArrayAdapter.createFromResource(
+                        context, R.array.currency_arrays,
+                        android.R.layout.simple_list_item_1)
+
         list_view.adapter = arrayAdapter
 
         search_text.addTextChangedListener(object : TextWatcher {
@@ -36,15 +38,12 @@ class CustomDialogClass(
         })
 
         list_view.setOnItemClickListener{ adapterView, _, i, _ ->
-            if (textView.tag == "top"){
-                viewModel.rateIdFrom = adapterView.getItemAtPosition(i).toString()
-            }else{
-                viewModel.rateIdTo = adapterView.getItemAtPosition(i).toString()
-            }
-            textView.text = adapterView.getItemAtPosition(i).toString()
-            viewModel.getExchangeRate()
-
+            clickListener.onText(adapterView.getItemAtPosition(i).toString())
             dismiss()
         }
     }
+}
+
+interface ClickListener{
+    fun onText(currencyName: String)
 }

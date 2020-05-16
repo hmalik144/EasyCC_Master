@@ -34,9 +34,7 @@ android {
         def ccApiKey = properties.getProperty("cc_api_key", "")
 
         it.buildConfigField 'String', "CC_API_KEY", ccApiKey
-
         it.resValue 'string', "api_key", ccApiKey
-
     }
 }
 
