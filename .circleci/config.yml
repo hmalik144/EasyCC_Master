@@ -13,7 +13,7 @@ jobs:
       - run:
           name: chmod permissions
           command: chmod +x ./gradlew
-       - run:
+      - run:
          name: remove local settings
          command: rm local.properties
       - run:
