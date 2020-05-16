@@ -4,6 +4,7 @@ import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appttude.h_mal.easycc.mvvm.data.repository.Repository
+import com.appttude.h_mal.easycc.mvvm.utils.toTwoDp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,9 +27,7 @@ class MainViewModel(
     var rateListener: RateListener? = null
 
     //operation results livedata based on outcome of operation
-    val operationSuccess = MutableLiveData<Boolean>()
-    val operationFailed = MutableLiveData<String>()
-
+    val operationSuccess = MutableLiveData<Pair<Boolean, String>>()
     val currencyRate = MutableLiveData<Double>()
 
     private var conversionRate: Double = 0.00
@@ -69,11 +68,6 @@ class MainViewModel(
         val toDoubleVal = toValue.toDouble()
         val newTopVal = toDoubleVal.times((1/conversionRate)).toTwoDp()
         editText.setText(newTopVal.toBigDecimal().toPlainString())
-    }
-
-    private fun Double.toTwoDp() = run {
-        val df = DecimalFormat("#.##")
-        java.lang.Double.valueOf(df.format(this))
     }
 
     fun start(){

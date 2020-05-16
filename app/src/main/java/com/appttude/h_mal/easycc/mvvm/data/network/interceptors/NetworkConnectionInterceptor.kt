@@ -1,4 +1,4 @@
-package com.appttude.h_mal.easycc.mvvm.data.network
+package com.appttude.h_mal.easycc.mvvm.data.network.interceptors
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -7,6 +7,10 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
 
+/**
+ * Interceptor used in [CurrencyApi] to intercept network status
+ *
+ */
 class NetworkConnectionInterceptor(
     context: Context
 ) : Interceptor {

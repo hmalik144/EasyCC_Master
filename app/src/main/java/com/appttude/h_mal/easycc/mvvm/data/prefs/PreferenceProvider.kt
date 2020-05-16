@@ -5,76 +5,80 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.appttude.h_mal.easycc.R
 
-private const val CONVERSION_ONE = "conversion_one"
-private const val CONVERSION_TWO = "conversion_two"
-private const val CONVERSION_ONE_WIDGET = "conversion_one_widget"
-private const val CONVERSION_TWO_WIDGET = "conversion_two_widget"
+/**
+ * Shared prefs class used for storing conversion name values as pairs
+ * Then retrieving as pairs
+ *
+ */
+private const val CURRENCY_ONE = "conversion_one"
+private const val CURRENCY_TWO = "conversion_two"
 
-class PreferenceProvider(
-    context: Context
-) {
+class PreferenceProvider(context: Context) {
 
     private val appContext = context.applicationContext
 
+    // Instance of Shared preferences
     private val preference: SharedPreferences
-        get() = PreferenceManager.getDefaultSharedPreferences(appContext)
+        = PreferenceManager.getDefaultSharedPreferences(appContext)
 
-    private val defaultRate: String = context.resources.getStringArray(R.array.currency_arrays)[0]
+    // Lazy declaration of default rate if no rate is retrieved from
+    private val defaultRate: String by lazy {
+        context.resources.getStringArray(R.array.currency_arrays)[0]
+    }
 
-
+    // Save currency pairs into prefs
     fun saveConversionPair(s1: String, s2: String) {
-        preference.edit().putString(
-                CONVERSION_ONE,
-                s1
-        ).putString(
-                CONVERSION_TWO,
-                s2
-        ).apply()
+        preference.edit()
+                .putString(CURRENCY_ONE, s1)
+                .putString(CURRENCY_TWO, s2)
+                .apply()
     }
 
+    // Retrieve Currency pairs from prefs
+    // Returns Pairs
     fun getConversionPair(): Pair<String?, String?> {
-        val s1 = getLastConversionOne()
-        val s2 = getLastConversionTwo()
+        val fromString = getConversionString(CURRENCY_ONE)
+        val toString = getConversionString(CURRENCY_TWO)
 
-        return Pair(s1,s2)
+        return Pair(fromString, toString)
     }
 
-    private fun getLastConversionOne(): String? {
-        return preference.getString(CONVERSION_ONE, defaultRate)
+
+    private fun getConversionString(conversionName: String): String? {
+        return preference
+                .getString(conversionName, defaultRate)
     }
 
-    private fun getLastConversionTwo(): String? {
-        return preference.getString(CONVERSION_TWO, defaultRate)
+    // Save currency pairs for widget
+    fun saveWidgetConversionPair(fromString: String,
+                                 toString: String, appWidgetId: Int) {
+
+        preference.edit()
+                .putString("${appWidgetId}_$CURRENCY_ONE", fromString)
+                .putString("${appWidgetId}_$CURRENCY_TWO", toString)
+                .apply()
     }
 
-    fun saveWidgetConversionPair(s1: String, s2: String, id: Int) {
-        preference.edit().putString(
-                "${id}_$CONVERSION_ONE",
-                s1
-        ).putString(
-                "${id}_$CONVERSION_TWO",
-                s2
-        ).apply()
+    // Retrieve currency pairs for widget
+    fun getWidgetConversionPair(appWidgetId: Int): Pair<String?, String?> {
+        val fromString = getWidgetConversionString(appWidgetId, CURRENCY_ONE)
+        val toString = getWidgetConversionString(appWidgetId, CURRENCY_TWO)
+
+        return Pair(fromString, toString)
     }
 
-    fun getWidgetConversionPair(id: Int): Pair<String?, String?> {
-        val s1 = getWidgetLastConversionOne(id)
-        val s2 = getWidgetLastConversionTwo(id)
-
-        return Pair(s1, s2)
+    private fun getWidgetConversionString(
+            appWidgetId: Int, conversionName: String): String? {
+        return preference
+                .getString("${appWidgetId}_$conversionName", defaultRate)
     }
 
-    private fun getWidgetLastConversionOne(id: Int): String? {
-        return preference.getString("${id}_$CONVERSION_ONE", defaultRate)
-    }
+    fun removeWidgetConversion(id: Int) {
+        preference.edit()
+                .remove("${id}_$CURRENCY_ONE")
+                .remove("${id}_$CURRENCY_TWO")
+                .apply()
 
-    private fun getWidgetLastConversionTwo(id: Int): String? {
-        return preference.getString("${id}_$CONVERSION_TWO", defaultRate)
-    }
-
-    fun removeWidgetConversion(id: Int){
-        preference.edit().remove("${id}_$CONVERSION_ONE").apply()
-        preference.edit().remove("${id}_$CONVERSION_TWO").apply()
     }
 
 }

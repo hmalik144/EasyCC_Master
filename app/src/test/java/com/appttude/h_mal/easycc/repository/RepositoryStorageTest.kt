@@ -45,7 +45,7 @@ class RepositoryStorageTest {
     }
 
     @Test
-    fun saveAndRetrieveCredentials_PositiveResponse() {
+    fun saveAndRetrieveWidgetPairs_PositiveResponse() {
         //GIVEN
         val s1 = "AUD - Australian Dollar"
         val s2 = "GBP - British Pound"

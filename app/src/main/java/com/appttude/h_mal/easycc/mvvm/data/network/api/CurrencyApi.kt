@@ -1,8 +1,8 @@
 package com.appttude.h_mal.easycc.mvvm.data.network.api
 
 import com.appttude.h_mal.easycc.mvvm.data.network.response.ResponseObject
-import com.appttude.h_mal.easycc.mvvm.data.network.NetworkConnectionInterceptor
-import com.appttude.h_mal.easycc.mvvm.data.network.QueryInterceptor
+import com.appttude.h_mal.easycc.mvvm.data.network.interceptors.NetworkConnectionInterceptor
+import com.appttude.h_mal.easycc.mvvm.data.network.interceptors.QueryInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit

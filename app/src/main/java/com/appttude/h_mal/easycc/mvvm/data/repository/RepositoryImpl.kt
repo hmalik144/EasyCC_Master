@@ -1,7 +1,6 @@
 package com.appttude.h_mal.easycc.mvvm.data.repository
 
 import android.content.Context
-import com.appttude.h_mal.easycc.BuildConfig
 import com.appttude.h_mal.easycc.mvvm.data.prefs.PreferenceProvider
 import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.mvvm.data.network.response.ResponseObject
@@ -9,7 +8,9 @@ import com.appttude.h_mal.easycc.mvvm.data.network.SafeApiRequest
 import com.appttude.h_mal.easycc.mvvm.data.network.api.CurrencyApi
 import com.appttude.h_mal.easycc.mvvm.utils.convertPairsListToString
 
-
+/**
+ * Default implementation of [Repository]. Single entry point for managing currency' data.
+ */
 class RepositoryImpl (
         private val api: CurrencyApi,
         private val prefs: PreferenceProvider,
@@ -18,29 +19,31 @@ class RepositoryImpl (
 
     private val appContext = context.applicationContext
 
-    override suspend fun getData(s1: String, s2: String
+    override suspend fun getData(fromCurrency: String, toCurrency: String
     ): ResponseObject{
-        val currencyPair = convertPairsListToString(s1, s2)
-        return responseUnwrap{
-            api.getCurrencyRate(currencyPair)}
+        // Set currency pairs as correct string for api query eg. AUD_GBP
+        val currencyPair = convertPairsListToString(fromCurrency, toCurrency)
+        return responseUnwrap{ api.getCurrencyRate(currencyPair)}
     }
 
     override fun getConversionPair(): Pair<String?, String?> {
         return prefs.getConversionPair()
     }
 
-    override fun setConversionPair(s1: String, s2: String){
-        prefs.saveConversionPair(s1, s2)
+    override fun setConversionPair(fromCurrency: String, toCurrency: String){
+        prefs.saveConversionPair(fromCurrency, toCurrency)
     }
 
     override fun getArrayList(): Array<String> =
             appContext.resources.getStringArray(R.array.currency_arrays)
 
-    override fun getWidgetConversionPairs(id: Int): Pair<String?, String?> =
-            prefs.getWidgetConversionPair(id)
+    override fun getWidgetConversionPairs(appWidgetId: Int): Pair<String?, String?> =
+            prefs.getWidgetConversionPair(appWidgetId)
 
-    override fun setWidgetConversionPairs(s1: String, s2: String, id: Int) =
-            prefs.saveWidgetConversionPair(s1, s2, id)
+    override fun setWidgetConversionPairs(fromCurrency: String,
+            toCurrency: String, appWidgetId: Int) {
+        return prefs.saveWidgetConversionPair(fromCurrency, toCurrency, appWidgetId)
+    }
 
     override fun removeWidgetConversionPairs(id: Int) =
             prefs.removeWidgetConversion(id)

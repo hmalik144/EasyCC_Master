@@ -2,8 +2,8 @@ package com.appttude.h_mal.easycc.mvvm.application
 
 import android.app.Application
 import com.appttude.h_mal.easycc.mvvm.data.repository.RepositoryImpl
-import com.appttude.h_mal.easycc.mvvm.data.network.NetworkConnectionInterceptor
-import com.appttude.h_mal.easycc.mvvm.data.network.QueryInterceptor
+import com.appttude.h_mal.easycc.mvvm.data.network.interceptors.NetworkConnectionInterceptor
+import com.appttude.h_mal.easycc.mvvm.data.network.interceptors.QueryInterceptor
 import com.appttude.h_mal.easycc.mvvm.data.network.api.CurrencyApi
 import com.appttude.h_mal.easycc.mvvm.data.prefs.PreferenceProvider
 import com.appttude.h_mal.easycc.mvvm.ui.app.MainViewModelFactory
