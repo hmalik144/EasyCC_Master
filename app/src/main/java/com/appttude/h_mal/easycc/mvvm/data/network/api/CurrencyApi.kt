@@ -20,8 +20,8 @@ interface CurrencyApi {
         ) : CurrencyApi{
 
             val okkHttpclient = OkHttpClient.Builder()
-                    .addNetworkInterceptor(networkConnectionInterceptor)
                     .addInterceptor(queryInterceptor)
+                    .addNetworkInterceptor(networkConnectionInterceptor)
                     .build()
 
             return Retrofit.Builder()

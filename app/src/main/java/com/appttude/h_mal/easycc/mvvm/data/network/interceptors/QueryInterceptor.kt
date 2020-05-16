@@ -20,7 +20,7 @@ class QueryInterceptor() : Interceptor {
         val originalHttpUrl: HttpUrl = original.url()
 
         val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("apikey", BuildConfig.CC_API_KEY)
+                .addQueryParameter("apiKey", BuildConfig.CC_API_KEY)
                 .build()
 
         // Add amended Url back to request
