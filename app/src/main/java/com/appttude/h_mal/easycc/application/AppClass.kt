@@ -24,7 +24,7 @@ class AppClass : Application(), KodeinAware {
 
         // instance() can be context or other binding created
         bind() from singleton { NetworkConnectionInterceptor(instance()) }
-        bind() from singleton { QueryInterceptor() }
+        bind() from singleton { QueryInterceptor(instance()) }
         bind() from singleton { CurrencyApi(instance(),instance()) }
         bind() from singleton { PreferenceProvider(instance()) }
         bind() from singleton { RepositoryImpl(instance(), instance(), instance()) }
