@@ -22,7 +22,6 @@ fun convertPairsListToString(s1: String, s2: String): String =
 fun Double.toTwoDp() = run {
     try {
         val df = DecimalFormat("0.00")
-        df.currency = Currency.getInstance(Locale.getDefault())
         valueOf(df.format(this))
     }catch (e: NumberFormatException){
         e.printStackTrace()
