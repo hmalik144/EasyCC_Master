@@ -30,7 +30,7 @@ class MainViewModel(
     val operationStartedListener = MutableLiveData<Boolean>()
     val operationFinishedListener = MutableLiveData<Pair<Boolean, String?>>()
 
-    private var conversionRate: Double = 0.00
+    private var conversionRate: Double = 1.00
 
     private fun getExchangeRate(){
         operationStartedListener.postValue(true)
