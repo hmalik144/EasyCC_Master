@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.appttude.h_mal.easycc.mvvm.ui.widget.CurrencyAppWidgetConfigureActivityKotlin"
+    android:configure="com.appttude.h_mal.easycc.ui.widget.CurrencyAppWidgetConfigureActivityKotlin"
     android:initialKeyguardLayout="@layout/currency_kotlin_app_widget"
     android:initialLayout="@layout/currency_kotlin_app_widget"
     android:minWidth="110dp"

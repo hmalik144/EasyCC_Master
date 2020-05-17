@@ -1,10 +1,10 @@
 package com.appttude.h_mal.easycc.repository
 
 import android.content.Context
-import com.appttude.h_mal.easycc.mvvm.data.network.api.CurrencyApi
-import com.appttude.h_mal.easycc.mvvm.data.prefs.PreferenceProvider
-import com.appttude.h_mal.easycc.mvvm.data.repository.Repository
-import com.appttude.h_mal.easycc.mvvm.data.repository.RepositoryImpl
+import com.appttude.h_mal.easycc.data.network.api.CurrencyApi
+import com.appttude.h_mal.easycc.data.prefs.PreferenceProvider
+import com.appttude.h_mal.easycc.data.repository.Repository
+import com.appttude.h_mal.easycc.data.repository.RepositoryImpl
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock

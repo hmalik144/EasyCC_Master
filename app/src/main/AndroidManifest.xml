@@ -13,14 +13,14 @@
         android:anyDensity="true" />
 
     <application
-        android:name=".mvvm.application.AppClass"
+        android:name="com.appttude.h_mal.easycc.application.AppClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name="com.appttude.h_mal.easycc.mvvm.ui.widget.CurrencyAppWidgetKotlin">
+        <receiver android:name="com.appttude.h_mal.easycc.widget.CurrencyAppWidgetKotlin">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -30,12 +30,12 @@
                 android:resource="@xml/currency_app_widget_info" />
         </receiver>
 
-        <activity android:name="com.appttude.h_mal.easycc.mvvm.ui.widget.CurrencyAppWidgetConfigureActivityKotlin">
+        <activity android:name="com.appttude.h_mal.easycc.ui.widget.CurrencyAppWidgetConfigureActivityKotlin">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-        <activity android:name="com.appttude.h_mal.easycc.mvvm.ui.app.MainActivity">
+        <activity android:name="com.appttude.h_mal.easycc.ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

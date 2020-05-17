@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="viewmodel"
-            type="com.appttude.h_mal.easycc.mvvm.ui.widget.WidgetViewModel" />
+            type="com.appttude.h_mal.easycc.ui.widget.WidgetViewModel" />
     </data>
 
     <RelativeLayout
@@ -17,7 +14,7 @@
         android:orientation="vertical"
         android:focusable="false"
         android:focusableInTouchMode="true"
-        tools:context=".mvvm.ui.widget.CurrencyAppWidgetConfigureActivityKotlin">
+        tools:context=".ui.widget.CurrencyAppWidgetConfigureActivityKotlin">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,7 +37,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="12dp"
-                        android:onClick="@{viewmodel::selectCurrencyOnClick}"
                         android:tag="top"
                         android:text="@={viewmodel.rateIdFrom}"
                         android:textColor="@color/colour_five"
@@ -58,7 +54,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="12dp"
-                        android:onClick="@{viewmodel::selectCurrencyOnClick}"
                         android:tag="bottom"
                         android:text="@={viewmodel.rateIdTo}"
                         android:textColor="@color/colour_five"
@@ -69,15 +64,15 @@
             </LinearLayout>
 
             <TextView
-                android:layout_marginTop="12dp"
                 android:layout_marginEnd="22dp"
                 android:id="@+id/submit_widget"
+                android:tag="submit"
+                android:padding="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/whole_view"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/colour_five"
-                android:onClick="@{viewmodel::submitSelectionOnClick}"
                 android:text="Submit" />
 
         </RelativeLayout>
