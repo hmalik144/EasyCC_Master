@@ -43,7 +43,7 @@ abstract class SafeApiRequest {
                     .append(errorMessageString)
                     .toString()
         }
-        Log.e("Api Response Error", log)
+//        Log.e("Api Response Error", log)
 
         //return error message
         //if null return error code
