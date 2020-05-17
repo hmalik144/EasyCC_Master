@@ -19,23 +19,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    testOptions {
-//        unitTests.returnDefaultValues = true
-//    }
     dataBinding {
         enabled = true
     }
 
     viewBinding.enabled = true
-
-    buildTypes.each {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
-        def ccApiKey = properties.getProperty("cc_api_key", "")
-
-        it.buildConfigField 'String', "CC_API_KEY", ccApiKey
-        it.resValue 'string', "api_key", ccApiKey
-    }
 }
 
 dependencies {

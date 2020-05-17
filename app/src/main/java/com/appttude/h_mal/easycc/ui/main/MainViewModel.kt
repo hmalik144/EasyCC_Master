@@ -78,7 +78,6 @@ class MainViewModel(
             val bottomVal1 = (fromValDouble * conversionRate)
             bottomVal1.toTwoDpString()
         }catch (e: NumberFormatException) {
-            Log.e(TAG, "no numbers inserted")
             null
         }
     }
@@ -89,7 +88,6 @@ class MainViewModel(
             val newTopVal = toDoubleVal.times((1/conversionRate))
             newTopVal.toTwoDpString()
         } catch (e: NumberFormatException) {
-            Log.e(TAG, "no numbers inserted")
             null
         }
     }
