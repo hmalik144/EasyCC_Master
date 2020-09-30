@@ -5,6 +5,8 @@ I created this app for private use but when it prevented me getting ripped off i
 This app also includes a home-screen widget which displays the current currency rate
 of your choice, which updates every 3 hours.
 
+<a href='https://play.google.com/store/apps/details?id=com.appttude.h_mal.easycc'><img src='https://raw.githubusercontent.com/steverichey/google-play-badge-svg/266d2b2df26f10d3c00b8129a0bd9f6da6b19f00/img/en_get.svg' /></a>
+
 ## Requirements
 
 Minimum android SDK version 21, Android 5.0.0 (Lollipop)
