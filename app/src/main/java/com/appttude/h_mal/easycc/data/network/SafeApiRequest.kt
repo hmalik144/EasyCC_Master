@@ -43,6 +43,8 @@ abstract class SafeApiRequest {
                     .append(errorMessageString)
                     .toString()
         }
+        print(log)
+
 //        Log.e("Api Response Error", log)
 
         //return error message
@@ -58,7 +60,7 @@ abstract class SafeApiRequest {
                 //extract ["error"] from error body
                 return JSONObject(it).getString("error")
             } catch (e: JSONException) {
-                Log.e(TAG, e.message)
+                e.printStackTrace()
             }
         }
         return null

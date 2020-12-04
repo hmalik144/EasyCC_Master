@@ -57,7 +57,7 @@ class WidgetViewModelTest {
         Mockito.`when`(repository.getWidgetConversionPairs(appId)).thenAnswer { pair }
         Mockito.`when`(repository.getWidgetConversionPairs(appId).first).thenReturn(null)
         Mockito.`when`(repository.getWidgetConversionPairs(appId).second).thenReturn(null)
-        Mockito.`when`(repository.getArrayList()).thenReturn(array)
+        Mockito.`when`(repository.getCurrenciesList()).thenReturn(array)
 
         //THEN
         viewModel.initiate(123)

@@ -1,11 +1,12 @@
 package com.appttude.h_mal.easycc.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appttude.h_mal.easycc.data.repository.Repository
+import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
 import com.appttude.h_mal.easycc.utils.toTwoDpString
+import com.appttude.h_mal.easycc.utils.trimToThree
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,9 +15,8 @@ import java.io.IOException
 /**
  * ViewModel for the task Main Activity Screen
  */
-private const val TAG = "MainViewModel"
 class MainViewModel(
-        // Repository injected via Viewmodel factory
+        private val currencyDataHelper: CurrencyDataHelper,
         private val repository: Repository
 ) : ViewModel(){
 
@@ -35,7 +35,7 @@ class MainViewModel(
     private fun getExchangeRate(){
         operationStartedListener.postValue(true)
 
-        // Null check on currency values
+        // view binded exchange rates selected null checked
         if (rateIdFrom.isNullOrEmpty() || rateIdTo.isNullOrEmpty()){
             operationFinishedListener.postValue(Pair(false, "Select currencies"))
             return
@@ -48,18 +48,19 @@ class MainViewModel(
             return
         }
 
-        // Open Coroutine on IO thread to carry out async task
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // Non-null assertion (!!) as values have been null checked and have not changed
-                val exchangeResponse = repository.getData(rateIdFrom!!, rateIdTo!!)
+                val exchangeResponse = currencyDataHelper.getDataFromApi(
+                    rateIdFrom!!.trimToThree(),
+                    rateIdTo!!.trimToThree()
+                )
 
-                exchangeResponse.results?.iterator()?.next()?.value?.let {
-                    // Response Successful and contains @param CurrencyObject
+                exchangeResponse.getCurrencyModel().let {
+                    conversionRate = it.rate
                     repository.setConversionPair(rateIdFrom!!, rateIdTo!!)
 
                     operationFinishedListener.postValue(Pair(true, null))
-                    conversionRate = it.value
                     return@launch
                 }
             }catch(e: IOException){

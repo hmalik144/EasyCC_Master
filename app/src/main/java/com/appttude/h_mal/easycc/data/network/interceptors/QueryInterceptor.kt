@@ -18,7 +18,7 @@ class QueryInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val original: Request = chain.request()
-        val originalHttpUrl: HttpUrl = original.url()
+        val originalHttpUrl: HttpUrl = original.url
 
         val url = originalHttpUrl.newBuilder()
                 .addQueryParameter("apiKey", context.getString(R.string.apiKey))

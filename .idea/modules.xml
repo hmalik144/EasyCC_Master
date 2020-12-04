@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Personal_Project---Currency_Converter-master.iml" filepath="$PROJECT_DIR$/Personal_Project---Currency_Converter-master.iml" group="Personal_Project---Currency_Converter-master" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Personal_Project---Currency_Converter-master/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/EasyCC.iml" filepath="$PROJECT_DIR$/.idea/modules/EasyCC.iml" group="EasyCC" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="EasyCC/app" />
     </modules>
   </component>
 </project>

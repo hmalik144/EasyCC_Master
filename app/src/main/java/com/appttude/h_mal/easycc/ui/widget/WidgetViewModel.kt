@@ -9,7 +9,7 @@ class WidgetViewModel(
         private val repository: Repository
 ) : ViewModel(){
 
-    private val defaultCurrency: String by lazy { repository.getArrayList()[0] }
+    private val defaultCurrency: String by lazy { repository.getCurrenciesList()[0] }
     var appWidgetId: Int? = null
 
     // data binding to @R.layout.currency_app_widget_configure

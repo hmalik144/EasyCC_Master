@@ -22,31 +22,30 @@ import org.kodein.di.generic.instance
 
 class MainActivity : AppCompatActivity(), KodeinAware, View.OnClickListener {
 
-    override val kodein by kodein()
     // Retrieve MainViewModelFactory via dependency injection
+    override val kodein by kodein()
     private val factory: MainViewModelFactory by instance()
 
-    companion object {
-        lateinit var viewModel: MainViewModel
-    }
+    lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Keyboard is not overlapping views
-        this.window.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
 
         viewModel = ViewModelProviders.of(this, factory)
-                .get(MainViewModel::class.java)
+            .get(MainViewModel::class.java)
 
         // Bind viewmodel to layout with view binding
         DataBindingUtil
-                .setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-                .apply {
-            viewmodel = viewModel
-            lifecycleOwner = this@MainActivity
-        }
+            .setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+            .apply {
+                viewmodel = viewModel
+                lifecycleOwner = this@MainActivity
+            }
 
         viewModel.initiate(intent.extras)
 
@@ -56,24 +55,23 @@ class MainActivity : AppCompatActivity(), KodeinAware, View.OnClickListener {
 
     private fun setUpObservers() {
         viewModel.operationStartedListener.observe(this, Observer {
-            // Show progress bar
             progressBar.hideView(false)
         })
         viewModel.operationFinishedListener.observe(this, Observer { pair ->
             // hide progress bar
             progressBar.hideView(true)
-            if (pair.first){
+            if (pair.first) {
                 // Operation was successful remove text in EditTexts
                 bottomInsertValues.clearEditText()
                 topInsertValue.clearEditText()
-            }else{
+            } else {
                 // Display Toast with error message returned from Viewmodel
                 pair.second?.let { displayToast(it) }
             }
         })
     }
 
-    private fun setUpListeners(){
+    private fun setUpListeners() {
         topInsertValue.addTextChangedListener(textWatcherClass)
         bottomInsertValues.addTextChangedListener(textWatcherClass2)
 

@@ -4,6 +4,7 @@ import com.appttude.h_mal.easycc.data.network.interceptors.NetworkConnectionInte
 import com.appttude.h_mal.easycc.data.network.interceptors.QueryInterceptor
 import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -22,26 +23,25 @@ interface CurrencyApi {
     // interface invokation to be used in application class
     companion object{
         operator fun invoke(
-                networkConnectionInterceptor: NetworkConnectionInterceptor,
-                queryInterceptor: QueryInterceptor
+            networkConnectionInterceptor: NetworkConnectionInterceptor,
+            queryInterceptor: QueryInterceptor,
+            interceptor: HttpLoggingInterceptor
         ) : CurrencyApi{
 
             // okkHttpclient with injected interceptors
             val okkHttpclient = OkHttpClient.Builder()
-                    .addInterceptor(queryInterceptor)
-                    .addNetworkInterceptor(networkConnectionInterceptor)
-                    .build()
+                .addInterceptor(interceptor)
+                .addInterceptor(queryInterceptor)
+                .addNetworkInterceptor(networkConnectionInterceptor)
+                .build()
 
             // Build retrofit
             return Retrofit.Builder()
-                    .client(okkHttpclient)
-                    .baseUrl("https://free.currencyconverterapi.com/api/v3/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                    .create(CurrencyApi::class.java)
+                .client(okkHttpclient)
+                .baseUrl("https://free.currencyconverterapi.com/api/v3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(CurrencyApi::class.java)
         }
     }
-
-
-
 }

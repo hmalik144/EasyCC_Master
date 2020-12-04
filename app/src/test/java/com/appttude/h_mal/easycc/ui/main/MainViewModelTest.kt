@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.repository.Repository
-import com.appttude.h_mal.easycc.models.CurrencyObject
+import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import com.appttude.h_mal.easycc.utils.observeOnce
@@ -16,7 +16,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import kotlin.time.seconds
 
 class MainViewModelTest {
 
@@ -29,10 +28,13 @@ class MainViewModelTest {
     @Mock
     lateinit var repository: Repository
 
+    @Mock
+    lateinit var helper: CurrencyDataHelper
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        viewModel = MainViewModel(repository)
+        viewModel = MainViewModel(helper, repository)
     }
 
     @Test
@@ -46,7 +48,7 @@ class MainViewModelTest {
         //WHEN
         Mockito.`when`(bundle.getString("parse_1")).thenReturn(currencyOne)
         Mockito.`when`(bundle.getString("parse_2")).thenReturn(currencyTwo)
-        Mockito.`when`(repository.getData(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
 
         //THEN
         viewModel.initiate(bundle)
@@ -55,7 +57,6 @@ class MainViewModelTest {
         }
         viewModel.operationFinishedListener.observeOnce {
             assertEquals(true, it.first)
-            Log.i("tag", "${it.first}  ${it.second}")
             assertNull(it.second)
         }
     }
@@ -70,7 +71,7 @@ class MainViewModelTest {
 
         //WHEN
         Mockito.`when`(repository.getConversionPair()).thenReturn(pair)
-        Mockito.`when`(repository.getData(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
 
         //THEN
         viewModel.initiate(null)
@@ -138,7 +139,7 @@ class MainViewModelTest {
         val responseObject = mock(ResponseObject::class.java)
 
         //WHEN
-        Mockito.`when`(repository.getData(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)
@@ -162,7 +163,7 @@ class MainViewModelTest {
         val responseObject = mock(ResponseObject::class.java)
 
         //WHEN
-        Mockito.`when`(repository.getData(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)
@@ -184,7 +185,7 @@ class MainViewModelTest {
         val responseObject = mock(ResponseObject::class.java)
 
         //WHEN
-        Mockito.`when`(repository.getData(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)

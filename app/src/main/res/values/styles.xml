@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colour_two</item>
         <item name="colorPrimaryDark">@color/colour_two</item>
         <item name="colorAccent">@color/colour_two</item>
-        <item name="android:windowBackground">@drawable/gradient_colour</item>
+        <item name="android:windowBackground">@drawable/ic_background</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:editTextColor">@color/colour_five</item>
