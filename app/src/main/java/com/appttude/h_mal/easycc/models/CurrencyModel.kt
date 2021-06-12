@@ -6,6 +6,6 @@ data class CurrencyModel(
     var rate: Double = 0.0
 )
 
-interface CurrencyModelInterface{
+interface CurrencyModelInterface {
     fun getCurrencyModel(): CurrencyModel
 }

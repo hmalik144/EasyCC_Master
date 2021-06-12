@@ -15,7 +15,7 @@ class WidgetSubmitDialog(
     context: Context,
     private val messageString: String,
     private val dialogInterface: DialogSubmit
-) :Dialog(context){
+) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +33,6 @@ class WidgetSubmitDialog(
     }
 }
 
-interface DialogSubmit{
+interface DialogSubmit {
     fun onSubmit()
 }

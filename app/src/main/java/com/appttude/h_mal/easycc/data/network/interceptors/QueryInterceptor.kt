@@ -1,7 +1,6 @@
 package com.appttude.h_mal.easycc.data.network.interceptors
 
 import android.content.Context
-import com.appttude.h_mal.easycc.BuildConfig
 import com.appttude.h_mal.easycc.R
 import okhttp3.HttpUrl
 import okhttp3.Interceptor

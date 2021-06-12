@@ -10,10 +10,10 @@ import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
  * inject repository into viewmodel
  */
 @Suppress("UNCHECKED_CAST")
-class MainViewModelFactory (
-        private val repository: RepositoryImpl,
-        private val helper: CurrencyDataHelper
-): ViewModelProvider.NewInstanceFactory(){
+class MainViewModelFactory(
+    private val repository: RepositoryImpl,
+    private val helper: CurrencyDataHelper
+) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return MainViewModel(helper, repository) as T

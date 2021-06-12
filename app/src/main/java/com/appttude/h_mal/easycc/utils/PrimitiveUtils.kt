@@ -2,7 +2,6 @@ package com.appttude.h_mal.easycc.utils
 
 import java.lang.Double.valueOf
 import java.text.DecimalFormat
-import java.util.*
 
 fun transformIntToArray(int: Int): IntArray{
     return intArrayOf(int)

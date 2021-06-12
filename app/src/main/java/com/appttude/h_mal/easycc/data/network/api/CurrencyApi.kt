@@ -12,7 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
- * Retrofit2 Network class to create network requests
+ * Retrofit Network class to currency api calls
  */
 interface CurrencyApi {
 
@@ -21,21 +21,19 @@ interface CurrencyApi {
     suspend fun getCurrencyRate(@Query("q") currency: String): Response<ResponseObject>
 
     // interface invokation to be used in application class
-    companion object{
+    companion object {
         operator fun invoke(
             networkConnectionInterceptor: NetworkConnectionInterceptor,
             queryInterceptor: QueryInterceptor,
             interceptor: HttpLoggingInterceptor
-        ) : CurrencyApi{
+        ): CurrencyApi {
 
-            // okkHttpclient with injected interceptors
             val okkHttpclient = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .addInterceptor(queryInterceptor)
                 .addNetworkInterceptor(networkConnectionInterceptor)
                 .build()
 
-            // Build retrofit
             return Retrofit.Builder()
                 .client(okkHttpclient)
                 .baseUrl("https://free.currencyconverterapi.com/api/v3/")

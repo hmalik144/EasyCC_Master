@@ -6,10 +6,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
-import kotlinx.coroutines.runBlocking
-import org.junit.Before
 import com.appttude.h_mal.easycc.utils.observeOnce
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
@@ -38,7 +38,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun initiate_validBundleValues_successResponse() = runBlocking{
+    fun initiate_validBundleValues_successResponse() = runBlocking {
         //GIVEN
         val currencyOne = "AUD - Australian Dollar"
         val currencyTwo = "GBP - British Pound"
@@ -48,7 +48,8 @@ class MainViewModelTest {
         //WHEN
         Mockito.`when`(bundle.getString("parse_1")).thenReturn(currencyOne)
         Mockito.`when`(bundle.getString("parse_2")).thenReturn(currencyTwo)
-        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
+            .thenReturn(responseObject)
 
         //THEN
         viewModel.initiate(bundle)
@@ -62,7 +63,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun initiate_invalidBundleValues_successfulResponse() = runBlocking{
+    fun initiate_invalidBundleValues_successfulResponse() = runBlocking {
         //GIVEN
         val currencyOne = "AUD - Australian Dollar"
         val currencyTwo = "GBP - British Pound"
@@ -71,7 +72,8 @@ class MainViewModelTest {
 
         //WHEN
         Mockito.`when`(repository.getConversionPair()).thenReturn(pair)
-        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
+            .thenReturn(responseObject)
 
         //THEN
         viewModel.initiate(null)
@@ -85,7 +87,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun initiate_sameBundleValues_successfulResponse() = runBlocking{
+    fun initiate_sameBundleValues_successfulResponse() = runBlocking {
         //GIVEN
         val currencyOne = "AUD - Australian Dollar"
         val bundle = mock(Bundle()::class.java)
@@ -128,9 +130,8 @@ class MainViewModelTest {
     }
 
 
-
     @Test
-    fun setCurrencyName_validValues_successResponse() = runBlocking{
+    fun setCurrencyName_validValues_successResponse() = runBlocking {
         //GIVEN
         val currencyOne = "AUD - Australian Dollar"
         val currencyTwo = "GBP - British Pound"
@@ -139,7 +140,8 @@ class MainViewModelTest {
         val responseObject = mock(ResponseObject::class.java)
 
         //WHEN
-        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
+            .thenReturn(responseObject)
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)
@@ -154,7 +156,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun setCurrencyName_sameValues_successfulResponse() = runBlocking{
+    fun setCurrencyName_sameValues_successfulResponse() = runBlocking {
         //GIVEN
         val currencyOne = "AUD - Australian Dollar"
         val currencyTwo = "GBP - British Pound"
@@ -163,7 +165,8 @@ class MainViewModelTest {
         val responseObject = mock(ResponseObject::class.java)
 
         //WHEN
-        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
+            .thenReturn(responseObject)
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)
@@ -177,7 +180,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun setCurrencyName_invalidValues_unsuccessfulResponse() = runBlocking{
+    fun setCurrencyName_invalidValues_unsuccessfulResponse() = runBlocking {
         //GIVEN
         val currencyOne = "AUD - Australian Dollar"
         val currencyTwo = "GBP - British Pound"
@@ -185,7 +188,8 @@ class MainViewModelTest {
         val responseObject = mock(ResponseObject::class.java)
 
         //WHEN
-        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo)).thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
+            .thenReturn(responseObject)
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)

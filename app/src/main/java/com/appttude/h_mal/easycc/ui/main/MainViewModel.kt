@@ -16,9 +16,9 @@ import java.io.IOException
  * ViewModel for the task Main Activity Screen
  */
 class MainViewModel(
-        private val currencyDataHelper: CurrencyDataHelper,
-        private val repository: Repository
-) : ViewModel(){
+    private val currencyDataHelper: CurrencyDataHelper,
+    private val repository: Repository
+) : ViewModel() {
 
     private val conversionPairs by lazy { repository.getConversionPair() }
 
@@ -32,17 +32,17 @@ class MainViewModel(
 
     private var conversionRate: Double = 1.00
 
-    private fun getExchangeRate(){
+    private fun getExchangeRate() {
         operationStartedListener.postValue(true)
 
         // view binded exchange rates selected null checked
-        if (rateIdFrom.isNullOrEmpty() || rateIdTo.isNullOrEmpty()){
+        if (rateIdFrom.isNullOrEmpty() || rateIdTo.isNullOrEmpty()) {
             operationFinishedListener.postValue(Pair(false, "Select currencies"))
             return
         }
 
         // No need to call api as it will return exchange rate as 1
-        if (rateIdFrom == rateIdTo){
+        if (rateIdFrom == rateIdTo) {
             conversionRate = 1.00
             operationFinishedListener.postValue(Pair(true, null))
             return
@@ -63,7 +63,7 @@ class MainViewModel(
                     operationFinishedListener.postValue(Pair(true, null))
                     return@launch
                 }
-            }catch(e: IOException){
+            } catch (e: IOException) {
                 e.message?.let {
                     operationFinishedListener.postValue(Pair(false, it))
                     return@launch
@@ -78,7 +78,7 @@ class MainViewModel(
             val fromValDouble = fromValue.toDouble()
             val bottomVal1 = (fromValDouble * conversionRate)
             bottomVal1.toTwoDpString()
-        }catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             null
         }
     }
@@ -86,7 +86,7 @@ class MainViewModel(
     fun getReciprocalConversion(toValue: String): String? {
         return try {
             val toDoubleVal = toValue.toDouble()
-            val newTopVal = toDoubleVal.times((1/conversionRate))
+            val newTopVal = toDoubleVal.times((1 / conversionRate))
             newTopVal.toTwoDpString()
         } catch (e: NumberFormatException) {
             null
@@ -94,11 +94,13 @@ class MainViewModel(
     }
 
     // Start operation based on dialog selection
-    fun setCurrencyName(tag: Any?, currencyName: String){
-        when(tag.toString()){
+    fun setCurrencyName(tag: Any?, currencyName: String) {
+        when (tag.toString()) {
             "top" -> rateIdFrom = currencyName
             "bottom" -> rateIdTo = currencyName
-            else -> { return }
+            else -> {
+                return
+            }
         }
 
         getExchangeRate()

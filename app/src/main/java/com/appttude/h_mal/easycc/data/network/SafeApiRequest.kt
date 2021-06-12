@@ -1,6 +1,5 @@
 package com.appttude.h_mal.easycc.data.network
 
-import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
@@ -10,11 +9,10 @@ import java.io.IOException
  * This abstract class extract objects from Retrofit [Response]
  * or throws IOException if object does not exist
  */
-private const val TAG = "SafeApiRequest"
 abstract class SafeApiRequest {
 
     suspend fun <T : Any> responseUnwrap(
-            call: suspend () -> Response<T>
+        call: suspend () -> Response<T>
     ): T {
         val response = call.invoke()
 
@@ -34,21 +32,17 @@ abstract class SafeApiRequest {
         val errorMessageString = errorBody.getError()
 
         //build a log message to log in console
-        val log = if (errorMessageString.isNullOrEmpty()){
+        val log = if (errorMessageString.isNullOrEmpty()) {
             errorCode
-        }else{
+        } else {
             StringBuilder()
-                    .append(errorCode)
-                    .append("\n")
-                    .append(errorMessageString)
-                    .toString()
+                .append(errorCode)
+                .append("\n")
+                .append(errorMessageString)
+                .toString()
         }
         print(log)
 
-//        Log.e("Api Response Error", log)
-
-        //return error message
-        //if null return error code
         return errorMessageString ?: errorCode
     }
 

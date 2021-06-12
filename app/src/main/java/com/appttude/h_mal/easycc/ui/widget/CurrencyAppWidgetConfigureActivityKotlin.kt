@@ -25,7 +25,8 @@ import org.kodein.di.generic.instance
 /**
  * The configuration screen for the [CurrencyAppWidgetKotlin] AppWidget.
  */
-class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAware, View.OnClickListener {
+class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAware,
+    View.OnClickListener {
 
     override val kodein by kodein()
     private val factory: WidgetViewModelFactory by instance()
@@ -47,7 +48,8 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAwar
         val extras = intent.extras
         if (extras != null) {
             mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+                AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID
+            )
         }
 
         // If this activity was started with an intent without an app widget ID, finish with an error.
@@ -72,12 +74,12 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAwar
     }
 
     private fun setupObserver() {
-        viewModel.operationFinishedListener.observe(this, Observer {
+        viewModel.operationFinishedListener.observe(this, {
 
             // it.first is a the success of the operation
-            if (it.first){
+            if (it.first) {
                 displaySubmitDialog()
-            }else{
+            } else {
                 // failed operation - display toast with message from it.second
                 it.second?.let { message -> displayToast(message) }
             }
@@ -87,8 +89,8 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAwar
     private fun setupDataBinding() {
         // data binding to @R.layout.currency_app_widget_configure
         DataBindingUtil.setContentView<CurrencyAppWidgetConfigureBinding>(
-                this,
-                R.layout.currency_app_widget_configure
+            this,
+            R.layout.currency_app_widget_configure
         ).apply {
             viewmodel = viewModel
             lifecycleOwner = this@CurrencyAppWidgetConfigureActivityKotlin
@@ -125,7 +127,7 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAwar
         }).show()
     }
 
-    fun finishCurrencyWidgetActivity(){
+    fun finishCurrencyWidgetActivity() {
         // Make sure we pass back the original appWidgetId
         val resultValue = intent
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
@@ -136,8 +138,9 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAwar
     fun sendUpdateIntent() {
         // It is the responsibility of the configuration activity to update the app widget
         // Send update broadcast to widget app class
-        Intent(this@CurrencyAppWidgetConfigureActivityKotlin,
-                CurrencyAppWidgetKotlin::class.java
+        Intent(
+            this@CurrencyAppWidgetConfigureActivityKotlin,
+            CurrencyAppWidgetKotlin::class.java
         ).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             viewModel.setWidgetStored()

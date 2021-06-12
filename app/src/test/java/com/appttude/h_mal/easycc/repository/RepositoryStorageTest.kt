@@ -1,6 +1,5 @@
 package com.appttude.h_mal.easycc.repository
 
-import android.content.Context
 import com.appttude.h_mal.easycc.data.network.api.BackupCurrencyApi
 import com.appttude.h_mal.easycc.data.network.api.CurrencyApi
 import com.appttude.h_mal.easycc.data.prefs.PreferenceProvider
@@ -19,8 +18,10 @@ class RepositoryStorageTest {
 
     @Mock
     lateinit var api: CurrencyApi
+
     @Mock
     lateinit var apiBackup: BackupCurrencyApi
+
     @Mock
     lateinit var prefs: PreferenceProvider
 

@@ -1,4 +1,4 @@
-package com.appttude.h_mal.easycc
+package com.appttude.h_mal.easycc.utils
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

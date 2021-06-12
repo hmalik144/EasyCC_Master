@@ -20,6 +20,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), KodeinAware, View.OnClickListener {
 
     // Retrieve MainViewModelFactory via dependency injection
@@ -54,10 +55,10 @@ class MainActivity : AppCompatActivity(), KodeinAware, View.OnClickListener {
     }
 
     private fun setUpObservers() {
-        viewModel.operationStartedListener.observe(this, Observer {
+        viewModel.operationStartedListener.observe(this, {
             progressBar.hideView(false)
         })
-        viewModel.operationFinishedListener.observe(this, Observer { pair ->
+        viewModel.operationFinishedListener.observe(this, { pair ->
             // hide progress bar
             progressBar.hideView(true)
             if (pair.first) {

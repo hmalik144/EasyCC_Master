@@ -2,13 +2,13 @@ package com.appttude.h_mal.easycc.models
 
 import com.google.gson.annotations.SerializedName
 
-data class CurrencyObject (
+data class CurrencyObject(
         @SerializedName("id")
-        var id : String,
+        var id: String,
         @SerializedName("fr")
-        var fr : String,
+        var fr: String,
         @SerializedName("to")
-        var to : String,
+        var to: String,
         @SerializedName("val")
         var value: Double
 )

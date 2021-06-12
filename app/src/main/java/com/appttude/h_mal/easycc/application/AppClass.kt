@@ -22,7 +22,7 @@ import org.kodein.di.generic.singleton
 
 class AppClass : Application(), KodeinAware {
 
-    // Kodein Dependecy Injection singletons and providers created
+    // KODEIN DI components declaration
     override val kodein by Kodein.lazy {
         import(androidXModule(this@AppClass))
 

@@ -13,9 +13,10 @@ import kotlinx.android.synthetic.main.custom_dialog.*
 /**
  * Custom dialog when selecting currencies from list with filter
  */
+@Suppress("DEPRECATION")
 class CustomDialogClass(
-        context: Context,
-        private val clickListener: ClickListener
+    context: Context,
+    private val clickListener: ClickListener
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,9 +30,10 @@ class CustomDialogClass(
 
         // array adapter for list of currencies in R.Strings
         val arrayAdapter =
-                ArrayAdapter.createFromResource(
-                        context, R.array.currency_arrays,
-                        android.R.layout.simple_list_item_1)
+            ArrayAdapter.createFromResource(
+                context, R.array.currency_arrays,
+                android.R.layout.simple_list_item_1
+            )
 
         list_view.adapter = arrayAdapter
 
@@ -41,11 +43,12 @@ class CustomDialogClass(
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 arrayAdapter.filter.filter(charSequence)
             }
+
             override fun afterTextChanged(editable: Editable) {}
         })
 
         // interface selection back to calling activity
-        list_view.setOnItemClickListener{ adapterView, _, i, _ ->
+        list_view.setOnItemClickListener { adapterView, _, i, _ ->
             clickListener.onText(adapterView.getItemAtPosition(i).toString())
             dismiss()
         }
@@ -53,6 +56,6 @@ class CustomDialogClass(
 }
 
 // Interface to handle selection within dialog
-interface ClickListener{
+interface ClickListener {
     fun onText(currencyName: String)
 }

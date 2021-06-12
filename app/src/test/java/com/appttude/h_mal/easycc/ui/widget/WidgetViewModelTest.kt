@@ -3,8 +3,8 @@ package com.appttude.h_mal.easycc.ui.widget
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.utils.observeOnce
-import org.junit.Before
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations
 
 private const val currencyOne = "AUD - Australian Dollar"
 private const val currencyTwo = "GBP - British Pound"
+
 class WidgetViewModelTest {
 
     // Run tasks synchronously
@@ -35,7 +36,7 @@ class WidgetViewModelTest {
     fun initiate_validInput_successfulResponse() {
         //GIVEN
         val appId = 123
-        val pair = Pair(currencyOne,currencyTwo)
+        val pair = Pair(currencyOne, currencyTwo)
 
         //WHEN
         Mockito.`when`(repository.getWidgetConversionPairs(appId)).thenReturn(pair)
