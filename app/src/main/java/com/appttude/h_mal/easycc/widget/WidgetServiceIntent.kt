@@ -14,6 +14,7 @@ import com.appttude.h_mal.easycc.utils.transformIntToArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.kodein.di.KodeinAware
 import org.kodein.di.LateInitKodein
 import org.kodein.di.generic.instance
 
@@ -24,7 +25,7 @@ class WidgetServiceIntent : JobIntentService() {
     private val repository: WidgetHelper by kodein.instance()
 
     override fun onHandleWork(intent: Intent) {
-        kodein.baseKodein = this.kodein
+        kodein.baseKodein = (application as KodeinAware).kodein
 
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val thisAppWidget = ComponentName(packageName, CurrencyAppWidgetKotlin::class.java.name)

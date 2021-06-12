@@ -47,7 +47,7 @@ class CurrencyAppWidgetKotlin : AppWidgetProvider() {
     }
 
     private fun loadWidget(context: Context) {
-        val mIntent = Intent(context, CurrencyAppWidgetKotlin::class.java)
+        val mIntent = Intent(context, WidgetServiceIntent::class.java)
         enqueueWork(context, mIntent)
     }
 }
