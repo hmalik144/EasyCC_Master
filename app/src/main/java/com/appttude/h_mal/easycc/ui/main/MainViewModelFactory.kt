@@ -2,7 +2,7 @@ package com.appttude.h_mal.easycc.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.appttude.h_mal.easycc.data.repository.RepositoryImpl
+import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
 
 /**
@@ -11,7 +11,7 @@ import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
  */
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
-    private val repository: RepositoryImpl,
+    private val repository: Repository,
     private val helper: CurrencyDataHelper
 ) : ViewModelProvider.NewInstanceFactory() {
 

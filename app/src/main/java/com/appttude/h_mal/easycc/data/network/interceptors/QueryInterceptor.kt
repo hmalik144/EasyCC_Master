@@ -20,12 +20,12 @@ class QueryInterceptor(
         val originalHttpUrl: HttpUrl = original.url
 
         val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("apiKey", context.getString(R.string.apiKey))
-                .build()
+            .addQueryParameter("apiKey", context.getString(R.string.apiKey))
+            .build()
 
         // Add amended Url back to request
         val requestBuilder: Request.Builder = original.newBuilder()
-                .url(url)
+            .url(url)
 
         val request: Request = requestBuilder.build()
         return chain.proceed(request)

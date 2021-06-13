@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.annotation.RequiresApi
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -21,7 +20,7 @@ class NetworkConnectionInterceptor(
     private val applicationContext = context.applicationContext
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (!isInternetAvailable()){
+        if (!isInternetAvailable()) {
             throw IOException("Make sure you have an active data connection")
         }
         return chain.proceed(chain.request())

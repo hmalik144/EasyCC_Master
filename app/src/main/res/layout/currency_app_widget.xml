@@ -8,10 +8,10 @@
     android:background="#4D000000">
 
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/exchangeName"
             android:layout_width="match_parent"
@@ -24,6 +24,7 @@
             android:textColor="#ffffff"
             android:text="Rate not set"
             tools:text="AUDGBP" />
+
         <ImageView
             android:id="@+id/refresh_icon"
             android:layout_width="18dp"
@@ -32,7 +33,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/exchangeName"
-            android:adjustViewBounds="true"/>
+            android:adjustViewBounds="true" />
     </RelativeLayout>
 
     <TextView
@@ -52,13 +53,13 @@
         android:textStyle="bold"
         tools:text="0.52646215" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/lastUpdated"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:gravity="center"-->
-<!--        android:textSize="8sp"-->
-<!--        android:textColor="#ffffff"-->
-<!--        android:text=" "-->
-<!--        tools:text="Last updated: 03:18 Wed" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/lastUpdated"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:gravity="center"-->
+    <!--        android:textSize="8sp"-->
+    <!--        android:textColor="#ffffff"-->
+    <!--        android:text=" "-->
+    <!--        tools:text="Last updated: 03:18 Wed" />-->
 </LinearLayout>

@@ -13,18 +13,18 @@ data class CurrencyResponse(
 	val amount: Double? = null,
 
 	@field:SerializedName("rates")
-	var rates : Map<String, Double>? = null,
+	var rates: Map<String, Double>? = null,
 
 	@field:SerializedName("base")
 	val base: String? = null
-): CurrencyModelInterface {
+) : CurrencyModelInterface {
 
-	override fun getCurrencyModel(): CurrencyModel {
-		return CurrencyModel(
+    override fun getCurrencyModel(): CurrencyModel {
+        return CurrencyModel(
 			base,
 			rates?.iterator()?.next()?.key,
 			rates?.iterator()?.next()?.value ?: 0.0
 		)
-	}
+    }
 
 }

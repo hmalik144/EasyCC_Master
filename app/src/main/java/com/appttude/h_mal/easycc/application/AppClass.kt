@@ -30,7 +30,7 @@ class AppClass : Application(), KodeinAware {
         bind() from singleton { loggingInterceptor() }
         bind() from singleton { QueryInterceptor(instance()) }
         bind() from singleton { CurrencyApi(instance(), instance(), instance()) }
-        bind() from singleton { BackupCurrencyApi(instance(),instance()) }
+        bind() from singleton { BackupCurrencyApi(instance(), instance()) }
         bind() from singleton { PreferenceProvider(instance()) }
         bind() from singleton { RepositoryImpl(instance(), instance(), instance()) }
         bind() from singleton { CurrencyDataHelper(instance()) }

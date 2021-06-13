@@ -11,7 +11,8 @@ android {
         targetSdkVersion 30
         versionCode 5
         versionName "4.1"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner "com.appttude.h_mal.easycc.application.TestRunner"
     }
     buildTypes {
         release {
@@ -47,6 +48,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    androidTestImplementation 'androidx.test:rules:1.4.0-beta02'
 
     //Retrofit and GSON
     def retrofit_ver = "2.8.1"

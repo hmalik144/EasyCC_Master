@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.databinding.CurrencyAppWidgetConfigureBinding

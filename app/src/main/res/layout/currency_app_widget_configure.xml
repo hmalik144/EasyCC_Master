@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewmodel"
             type="com.appttude.h_mal.easycc.ui.widget.WidgetViewModel" />
@@ -76,7 +77,6 @@
                 android:text="Submit" />
 
         </RelativeLayout>
-
 
 
     </RelativeLayout>

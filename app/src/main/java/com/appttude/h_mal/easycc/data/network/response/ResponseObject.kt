@@ -7,18 +7,17 @@ import com.google.gson.annotations.SerializedName
 
 data class ResponseObject(
         @field:SerializedName("query")
-        var query : Any? = null,
+        var query: Any? = null,
         @field:SerializedName("results")
-        var results : Map<String, CurrencyObject>? = null
-): CurrencyModelInterface {
+        var results: Map<String, CurrencyObject>? = null
+) : CurrencyModelInterface {
 
-        override fun getCurrencyModel(): CurrencyModel {
-                val res = results?.iterator()?.next()?.value
-                return CurrencyModel(
-                        res?.fr,
-                        res?.to,
-                        res?.value ?: 0.0
-                )
-        }
-
+    override fun getCurrencyModel(): CurrencyModel {
+        val res = results?.iterator()?.next()?.value
+        return CurrencyModel(
+                res?.fr,
+                res?.to,
+                res?.value ?: 0.0
+        )
+    }
 }
