@@ -18,11 +18,11 @@ fun currencyRobot(func: CurrencyRobot.() -> Unit) = CurrencyRobot()
 class CurrencyRobot {
 
     fun clickOnTopList() {
-        Espresso.onView(ViewMatchers.withId(R.id.currency_one)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.currencyOne)).perform(ViewActions.click())
     }
 
     fun clickOnBottomList() {
-        Espresso.onView(ViewMatchers.withId(R.id.currency_two)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.currencyTwo)).perform(ViewActions.click())
     }
 
     fun searchInCurrencyList(search: String) {

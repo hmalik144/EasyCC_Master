@@ -13,32 +13,12 @@ import retrofit2.http.Query
 /**
  * Retrofit Network class to currency api calls
  */
-interface BackupCurrencyApi {
+interface BackupCurrencyApi : Api {
 
     @GET("latest?")
     suspend fun getCurrencyRate(
         @Query("from") currencyFrom: String,
         @Query("to") currencyTo: String
     ): Response<CurrencyResponse>
-
-    companion object {
-        operator fun invoke(
-            networkConnectionInterceptor: NetworkConnectionInterceptor,
-            interceptor: HttpLoggingInterceptor
-        ): BackupCurrencyApi {
-
-            val okkHttpclient = OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .addNetworkInterceptor(networkConnectionInterceptor)
-                .build()
-
-            return Retrofit.Builder()
-                .client(okkHttpclient)
-                .baseUrl("https://api.frankfurter.app/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(BackupCurrencyApi::class.java)
-        }
-    }
 
 }

@@ -6,77 +6,66 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
 import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.databinding.ActivityMainBinding
 import com.appttude.h_mal.easycc.utils.clearEditText
 import com.appttude.h_mal.easycc.utils.displayToast
 import com.appttude.h_mal.easycc.utils.hideView
-import kotlinx.android.synthetic.main.activity_main.*
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.kodein
-import org.kodein.di.generic.instance
+import dagger.hilt.android.AndroidEntryPoint
 
-@Suppress("DEPRECATION")
-class MainActivity : AppCompatActivity(), KodeinAware, View.OnClickListener {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    // Retrieve MainViewModelFactory via dependency injection
-    override val kodein by kodein()
-    private val factory: MainViewModelFactory by instance()
-
-    lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Keyboard is not overlapping views
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        /*
+         * Prevent keyboard overlapping views
+         */
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
 
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(MainViewModel::class.java)
-
-        // Bind viewmodel to layout with view binding
-        DataBindingUtil
-            .setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-            .apply {
-                viewmodel = viewModel
-                lifecycleOwner = this@MainActivity
-            }
-
         viewModel.initiate(intent.extras)
+
+        binding.currencyOne.text = viewModel.rateIdTo
+        binding.currencyTwo.text  = viewModel.rateIdFrom
 
         setUpListeners()
         setUpObservers()
     }
 
     private fun setUpObservers() {
-        viewModel.operationStartedListener.observe(this, {
-            progressBar.hideView(false)
-        })
-        viewModel.operationFinishedListener.observe(this, { pair ->
+        viewModel.operationStartedListener.observe(this) {
+            binding.progressBar.hideView(false)
+        }
+        viewModel.operationFinishedListener.observe(this) { pair ->
             // hide progress bar
-            progressBar.hideView(true)
+            binding.progressBar.hideView(true)
             if (pair.first) {
                 // Operation was successful remove text in EditTexts
-                bottomInsertValues.clearEditText()
-                topInsertValue.clearEditText()
+                binding.bottomInsertValues.clearEditText()
+                binding.topInsertValue.clearEditText()
             } else {
                 // Display Toast with error message returned from Viewmodel
                 pair.second?.let { displayToast(it) }
             }
-        })
+        }
     }
 
     private fun setUpListeners() {
-        topInsertValue.addTextChangedListener(textWatcherClass)
-        bottomInsertValues.addTextChangedListener(textWatcherClass2)
+        binding.topInsertValue.addTextChangedListener(textWatcherClass)
+        binding.bottomInsertValues.addTextChangedListener(textWatcherClass2)
 
-        currency_one.setOnClickListener(this)
-        currency_two.setOnClickListener(this)
+        binding.currencyOne.setOnClickListener(this)
+        binding.currencyTwo.setOnClickListener(this)
     }
 
     private fun showCustomDialog(view: View?) {
@@ -97,32 +86,32 @@ class MainActivity : AppCompatActivity(), KodeinAware, View.OnClickListener {
     private val textWatcherClass: TextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
             // Remove text watcher on other text watcher to prevent infinite loop
-            bottomInsertValues.removeTextChangedListener(textWatcherClass2)
+            binding.bottomInsertValues.removeTextChangedListener(textWatcherClass2)
             // Clear any values if current EditText is empty
-            if (topInsertValue.text.isNullOrEmpty())
-                bottomInsertValues.setText("")
+            if (binding.topInsertValue.text.isNullOrEmpty())
+                binding.bottomInsertValues.setText("")
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun afterTextChanged(s: Editable) {
-            bottomInsertValues.setText(viewModel.getConversion(s.toString()))
+            binding.bottomInsertValues.setText(viewModel.getConversion(s.toString()))
             // add Text watcher back as it is safe to do so
-            bottomInsertValues.addTextChangedListener(textWatcherClass2)
+            binding.bottomInsertValues.addTextChangedListener(textWatcherClass2)
         }
     }
 
     private val textWatcherClass2: TextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
 
-            topInsertValue.removeTextChangedListener(textWatcherClass)
-            if (bottomInsertValues.text.isNullOrEmpty())
-                topInsertValue.clearEditText()
+            binding.topInsertValue.removeTextChangedListener(textWatcherClass)
+            if (binding.bottomInsertValues.text.isNullOrEmpty())
+                binding.topInsertValue.clearEditText()
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun afterTextChanged(s: Editable) {
-            topInsertValue.setText(viewModel.getReciprocalConversion(s.toString()))
-            topInsertValue.addTextChangedListener(textWatcherClass)
+            binding.topInsertValue.setText(viewModel.getReciprocalConversion(s.toString()))
+            binding.topInsertValue.addTextChangedListener(textWatcherClass)
         }
     }
 

@@ -14,32 +14,10 @@ import retrofit2.http.Query
 /**
  * Retrofit Network class to currency api calls
  */
-interface CurrencyApi {
+interface CurrencyApi : Api{
 
     // Get rate from server with arguments passed in Repository
     @GET("convert?")
     suspend fun getCurrencyRate(@Query("q") currency: String): Response<ResponseObject>
 
-    // interface invokation to be used in application class
-    companion object {
-        operator fun invoke(
-            networkConnectionInterceptor: NetworkConnectionInterceptor,
-            queryInterceptor: QueryInterceptor,
-            interceptor: HttpLoggingInterceptor
-        ): CurrencyApi {
-
-            val okkHttpclient = OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .addInterceptor(queryInterceptor)
-                .addNetworkInterceptor(networkConnectionInterceptor)
-                .build()
-
-            return Retrofit.Builder()
-                .client(okkHttpclient)
-                .baseUrl("https://free.currencyconverterapi.com/api/v3/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(CurrencyApi::class.java)
-        }
-    }
 }

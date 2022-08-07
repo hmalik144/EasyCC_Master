@@ -3,8 +3,9 @@ package com.appttude.h_mal.easycc.helper
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.models.CurrencyModel
 import com.appttude.h_mal.easycc.utils.trimToThree
+import javax.inject.Inject
 
-class WidgetHelper(
+class WidgetHelper @Inject constructor(
     private val helper: CurrencyDataHelper,
     val repository: Repository
 ) {

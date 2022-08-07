@@ -2,22 +2,47 @@
 
 package com.appttude.h_mal.easycc.ui.main
 
-
-import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
+import com.appttude.h_mal.easycc.application.modules.MockRepository
+import com.appttude.h_mal.easycc.data.repository.Repository
+import com.appttude.h_mal.easycc.data.repository.RepositoryImpl
+import com.appttude.h_mal.easycc.di.AppModule
 import com.appttude.h_mal.easycc.robots.currencyRobot
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
+import dagger.hilt.components.SingletonComponent
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@LargeTest
-@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
+@UninstallModules(AppModule::class)
 class MainActivityTest {
 
-    @Rule
-    @JvmField
+    @get:Rule(order = 0)
+    var hiltAndroidRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
+
+    @Before
+    fun setUp() {
+        hiltAndroidRule.inject()
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object TestAppModule {
+        @Provides
+        fun provideRepository(impl: MockRepository): Repository {
+            return impl
+        }
+    }
 
     @Test
     fun mainActivityTest() {

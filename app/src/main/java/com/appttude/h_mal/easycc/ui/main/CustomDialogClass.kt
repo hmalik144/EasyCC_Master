@@ -7,8 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.WindowManager
 import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import com.appttude.h_mal.easycc.R
-import kotlinx.android.synthetic.main.custom_dialog.*
 
 /**
  * Custom dialog when selecting currencies from list with filter
@@ -35,10 +37,11 @@ class CustomDialogClass(
                 android.R.layout.simple_list_item_1
             )
 
+        val list_view = findViewById<ListView>(R.id.list_view)
         list_view.adapter = arrayAdapter
 
         // Edit text to filter @arrayAdapter
-        search_text.addTextChangedListener(object : TextWatcher {
+        findViewById<TextView>(R.id.search_text).addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 arrayAdapter.filter.filter(charSequence)

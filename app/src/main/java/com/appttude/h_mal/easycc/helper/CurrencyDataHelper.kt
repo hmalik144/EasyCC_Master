@@ -2,8 +2,9 @@ package com.appttude.h_mal.easycc.helper
 
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.models.CurrencyModelInterface
+import javax.inject.Inject
 
-class CurrencyDataHelper(
+class CurrencyDataHelper @Inject constructor(
     val repository: Repository
 ) {
 

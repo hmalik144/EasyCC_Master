@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name="com.appttude.h_mal.easycc.widget.CurrencyAppWidgetKotlin">
+        <receiver android:name="com.appttude.h_mal.easycc.widget.CurrencyAppWidgetKotlin"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -30,12 +31,14 @@
                 android:resource="@xml/currency_app_widget_info" />
         </receiver>
 
-        <activity android:name="com.appttude.h_mal.easycc.ui.widget.CurrencyAppWidgetConfigureActivityKotlin">
+        <activity android:name="com.appttude.h_mal.easycc.ui.widget.CurrencyAppWidgetConfigureActivityKotlin"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-        <activity android:name="com.appttude.h_mal.easycc.ui.main.MainActivity">
+        <activity android:name="com.appttude.h_mal.easycc.ui.main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -9,11 +9,12 @@ import com.appttude.h_mal.easycc.data.network.response.CurrencyResponse
 import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.prefs.PreferenceProvider
 import com.appttude.h_mal.easycc.utils.convertPairsListToString
+import javax.inject.Inject
 
 /**
  * Default implementation of [Repository]. Single entry point for managing currency' data.
  */
-class RepositoryImpl(
+class RepositoryImpl @Inject constructor(
     private val api: CurrencyApi,
     private val backUpApi: BackupCurrencyApi,
     private val prefs: PreferenceProvider
