@@ -21,7 +21,6 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val handle: SavedStateHandle,
     private val currencyDataHelper: CurrencyDataHelper,
     private val repository: Repository
 ) : ViewModel() {
