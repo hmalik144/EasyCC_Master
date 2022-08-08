@@ -49,6 +49,9 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.4.0'
     implementation 'org.jetbrains.kotlin:kotlin-test:1.7.10'
 
+    // Coroutines
+    def coroutines_version = "1.6.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 
     //Retrofit and GSON
     def retrofit_ver = "2.8.1"

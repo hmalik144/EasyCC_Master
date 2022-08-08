@@ -6,7 +6,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
+import com.appttude.h_mal.easycc.utils.MainCoroutineRule
 import com.appttude.h_mal.easycc.utils.observeOnce
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
@@ -22,6 +24,9 @@ class MainViewModelTest {
     // Run tasks synchronously
     @get:Rule
     val instantTaskExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     lateinit var viewModel: MainViewModel
 
