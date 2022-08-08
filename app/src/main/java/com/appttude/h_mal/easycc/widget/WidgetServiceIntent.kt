@@ -1,6 +1,8 @@
 package com.appttude.h_mal.easycc.widget
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
@@ -11,22 +13,20 @@ import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.helper.WidgetHelper
 import com.appttude.h_mal.easycc.ui.main.MainActivity
 import com.appttude.h_mal.easycc.utils.transformIntToArray
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.LateInitKodein
-import org.kodein.di.generic.instance
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class WidgetServiceIntent : JobIntentService() {
 
     //DI with kodein to use in CurrencyAppWidgetKotlin
-    private val kodein = LateInitKodein()
-    private val repository: WidgetHelper by kodein.instance()
+    @Inject
+    lateinit var helper: WidgetHelper
 
     override fun onHandleWork(intent: Intent) {
-        kodein.baseKodein = (application as KodeinAware).kodein
-
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val thisAppWidget = ComponentName(packageName, CurrencyAppWidgetKotlin::class.java.name)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget)
@@ -45,7 +45,7 @@ class WidgetServiceIntent : JobIntentService() {
         val views = RemoteViews(context.packageName, R.layout.currency_app_widget)
 
         CoroutineScope(Dispatchers.Main).launch {
-            val exchangeResponse = repository.getWidgetData()
+            val exchangeResponse = helper.getWidgetData()
 
             exchangeResponse?.let {
                 val titleString = "${it.from}${it.to}"
@@ -63,7 +63,7 @@ class WidgetServiceIntent : JobIntentService() {
                 val configPendingIntent =
                     PendingIntent.getActivity(
                         context, appWidgetId, clickIntentTemplate,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
                     )
                 views.setOnClickPendingIntent(R.id.widget_view, configPendingIntent)
             }
@@ -87,14 +87,14 @@ class WidgetServiceIntent : JobIntentService() {
             context,
             appWidgetId,
             updateIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
         )
     }
 
     private fun clickingIntent(
         context: Context
     ): Intent {
-        val pair = repository.repository.getConversionPair()
+        val pair = helper.repository.getConversionPair()
         val s1 = pair.first
         val s2 = pair.second
         return Intent(context, MainActivity::class.java).apply {

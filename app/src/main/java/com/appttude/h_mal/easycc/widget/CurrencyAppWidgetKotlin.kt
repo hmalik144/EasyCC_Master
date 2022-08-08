@@ -6,21 +6,19 @@ import android.content.Context
 import android.content.Intent
 import com.appttude.h_mal.easycc.helper.WidgetHelper
 import com.appttude.h_mal.easycc.widget.WidgetServiceIntent.Companion.enqueueWork
-import org.kodein.di.KodeinAware
-import org.kodein.di.LateInitKodein
-import org.kodein.di.generic.instance
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in [CurrencyAppWidgetKotlin]
  */
-
+@AndroidEntryPoint
 class CurrencyAppWidgetKotlin : AppWidgetProvider() {
 
-    //DI with kodein to use in CurrencyAppWidgetKotlin
-    private val kodein = LateInitKodein()
-    private val repository: WidgetHelper by kodein.instance()
+    @Inject
+    lateinit var helper: WidgetHelper
 
     //update trigger either on timed update or from from first start
     override fun onUpdate(
@@ -33,10 +31,9 @@ class CurrencyAppWidgetKotlin : AppWidgetProvider() {
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        kodein.baseKodein = (context.applicationContext as KodeinAware).kodein
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
-            repository.removeWidgetData(appWidgetId)
+            helper.removeWidgetData(appWidgetId)
         }
         super.onDeleted(context, appWidgetIds)
     }

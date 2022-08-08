@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.appttude.h_mal.easycc.R
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 /**
  * Shared prefs class used for storing conversion name values as pairs
@@ -13,7 +15,7 @@ import com.appttude.h_mal.easycc.R
 private const val CURRENCY_ONE = "conversion_one"
 private const val CURRENCY_TWO = "conversion_two"
 
-class PreferenceProvider(context: Context) {
+class PreferenceProvider @Inject constructor(@ApplicationContext context: Context) {
 
     private val appContext = context.applicationContext
 

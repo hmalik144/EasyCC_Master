@@ -4,8 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.utils.trimToThree
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class WidgetViewModel(
+@HiltViewModel
+class WidgetViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 

@@ -6,38 +6,32 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
-import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.databinding.CurrencyAppWidgetConfigureBinding
 import com.appttude.h_mal.easycc.ui.main.ClickListener
 import com.appttude.h_mal.easycc.ui.main.CustomDialogClass
 import com.appttude.h_mal.easycc.utils.displayToast
 import com.appttude.h_mal.easycc.utils.transformIntToArray
 import com.appttude.h_mal.easycc.widget.CurrencyAppWidgetKotlin
-import kotlinx.android.synthetic.main.currency_app_widget_configure.*
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.kodein
-import org.kodein.di.generic.instance
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * The configuration screen for the [CurrencyAppWidgetKotlin] AppWidget.
  */
-class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAware,
+@AndroidEntryPoint
+class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(),
     View.OnClickListener {
 
-    override val kodein by kodein()
-    private val factory: WidgetViewModelFactory by instance()
+    val viewModel: WidgetViewModel by viewModels()
 
-    var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-
-    companion object {
-        lateinit var viewModel: WidgetViewModel
-    }
+    private lateinit var binding: CurrencyAppWidgetConfigureBinding
+    private var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
+        binding = CurrencyAppWidgetConfigureBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
@@ -57,23 +51,20 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAwar
             return
         }
 
-        // ViewModel setup
-        viewModel = ViewModelProviders.of(this, factory).get(WidgetViewModel::class.java)
         viewModel.initiate(mAppWidgetId)
 
-        setupDataBinding()
         setupObserver()
         setupClickListener()
     }
 
     private fun setupClickListener() {
-        submit_widget.setOnClickListener(this)
-        currency_one.setOnClickListener(this)
-        currency_two.setOnClickListener(this)
+        binding.submitWidget.setOnClickListener(this)
+        binding.currencyOne.setOnClickListener(this)
+        binding.currencyTwo.setOnClickListener(this)
     }
 
     private fun setupObserver() {
-        viewModel.operationFinishedListener.observe(this, {
+        viewModel.operationFinishedListener.observe(this) {
 
             // it.first is a the success of the operation
             if (it.first) {
@@ -82,17 +73,6 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(), KodeinAwar
                 // failed operation - display toast with message from it.second
                 it.second?.let { message -> displayToast(message) }
             }
-        })
-    }
-
-    private fun setupDataBinding() {
-        // data binding to @R.layout.currency_app_widget_configure
-        DataBindingUtil.setContentView<CurrencyAppWidgetConfigureBinding>(
-            this,
-            R.layout.currency_app_widget_configure
-        ).apply {
-            viewmodel = viewModel
-            lifecycleOwner = this@CurrencyAppWidgetConfigureActivityKotlin
         }
     }
 

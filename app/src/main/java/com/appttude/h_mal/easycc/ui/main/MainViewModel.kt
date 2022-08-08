@@ -2,20 +2,25 @@ package com.appttude.h_mal.easycc.ui.main
 
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
 import com.appttude.h_mal.easycc.utils.toTwoDpString
 import com.appttude.h_mal.easycc.utils.trimToThree
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
+import javax.inject.Inject
 
 /**
  * ViewModel for the task Main Activity Screen
  */
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val currencyDataHelper: CurrencyDataHelper,
     private val repository: Repository
 ) : ViewModel() {
@@ -48,7 +53,7 @@ class MainViewModel(
             return
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
                 // Non-null assertion (!!) as values have been null checked and have not changed
                 val exchangeResponse = currencyDataHelper.getDataFromApi(

@@ -1,13 +1,14 @@
 package com.appttude.h_mal.easycc.application.modules
 
-import com.appttude.h_mal.easycc.application.TestApplication.Companion.idlingResources
+import com.appttude.h_mal.easycc.application.TestRunner.Companion.idlingResources
 import com.appttude.h_mal.easycc.data.network.response.CurrencyResponse
 import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.models.CurrencyObject
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
-class MockRepository : Repository {
+class MockRepository @Inject constructor() : Repository {
 
     override suspend fun getDataFromApi(fromCurrency: String, toCurrency: String): ResponseObject {
         idlingResources.increment()

@@ -4,7 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import com.appttude.h_mal.easycc.R
-import kotlinx.android.synthetic.main.confirm_dialog.*
+import com.appttude.h_mal.easycc.databinding.ActivityMainBinding
+import com.appttude.h_mal.easycc.databinding.ConfirmDialogBinding
 
 
 /**
@@ -17,19 +18,22 @@ class WidgetSubmitDialog(
     private val dialogInterface: DialogSubmit
 ) : Dialog(context) {
 
+    private lateinit var binding: ConfirmDialogBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.confirm_dialog)
+        binding = ConfirmDialogBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         // layer behind dialog to be transparent
         window!!.setBackgroundDrawableResource(android.R.color.transparent)
         // Dialog cannot be cancelled by clicking away
         setCancelable(false)
 
-        confirm_text.text = messageString
+        binding.confirmText.text = messageString
 
         // handle dialog buttons
-        confirm_yes.setOnClickListener { dialogInterface.onSubmit() }
-        confirm_no.setOnClickListener { dismiss() }
+        binding.confirmYes.setOnClickListener { dialogInterface.onSubmit() }
+        binding.confirmNo.setOnClickListener { dismiss() }
     }
 }
 
