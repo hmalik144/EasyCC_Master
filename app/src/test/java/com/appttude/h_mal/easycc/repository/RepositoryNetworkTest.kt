@@ -79,8 +79,7 @@ class RepositoryNetworkTest {
         val ioExceptionReturned = assertFailsWith<IOException> {
             repository.getDataFromApi(s1, s2)
         }
-        assertNotNull(ioExceptionReturned)
-        assertNotNull(ioExceptionReturned.message)
+        assertEquals(ioExceptionReturned.message, "Error Code: 0")
     }
 
 }

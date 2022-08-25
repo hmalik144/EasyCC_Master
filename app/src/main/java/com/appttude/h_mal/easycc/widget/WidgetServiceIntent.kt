@@ -22,7 +22,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class WidgetServiceIntent : JobIntentService() {
 
-    //DI with kodein to use in CurrencyAppWidgetKotlin
     @Inject
     lateinit var helper: WidgetHelper
 
@@ -45,7 +44,7 @@ class WidgetServiceIntent : JobIntentService() {
         val views = RemoteViews(context.packageName, R.layout.currency_app_widget)
 
         CoroutineScope(Dispatchers.Main).launch {
-            val exchangeResponse = helper.getWidgetData()
+            val exchangeResponse = helper.getWidgetData(appWidgetId)
 
             exchangeResponse?.let {
                 val titleString = "${it.from}${it.to}"
@@ -63,7 +62,7 @@ class WidgetServiceIntent : JobIntentService() {
                 val configPendingIntent =
                     PendingIntent.getActivity(
                         context, appWidgetId, clickIntentTemplate,
-                        PendingIntent.FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                        FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
                     )
                 views.setOnClickPendingIntent(R.id.widget_view, configPendingIntent)
             }

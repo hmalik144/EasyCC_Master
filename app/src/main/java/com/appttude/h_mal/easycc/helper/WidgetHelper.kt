@@ -10,9 +10,9 @@ class WidgetHelper @Inject constructor(
     val repository: Repository
 ) {
 
-    suspend fun getWidgetData(): CurrencyModel? {
+    suspend fun getWidgetData(appWidgetId: Int): CurrencyModel? {
         try {
-            val pair = repository.getConversionPair()
+            val pair = repository.getWidgetConversionPairs(appWidgetId)
             val s1 = pair.first?.trimToThree() ?: return null
             val s2 = pair.second?.trimToThree() ?: return null
 
