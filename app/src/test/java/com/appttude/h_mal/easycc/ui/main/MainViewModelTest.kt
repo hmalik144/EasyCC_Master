@@ -8,6 +8,7 @@ import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
 import com.appttude.h_mal.easycc.utils.MainCoroutineRule
 import com.appttude.h_mal.easycc.utils.observeOnce
+import com.nhaarman.mockitokotlin2.doAnswer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -18,7 +19,9 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
+import java.io.IOException
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
 
     // Run tasks synchronously
@@ -70,24 +73,25 @@ class MainViewModelTest {
     @Test
     fun initiate_invalidBundleValues_successfulResponse() = runBlocking {
         //GIVEN
-        val currencyOne = "AUD - Australian Dollar"
-        val currencyTwo = "GBP - British Pound"
-        val pair = Pair(currencyOne, currencyTwo)
-        val responseObject = mock(ResponseObject::class.java)
+        val currencyOne = "corrupted data"
+        val currencyTwo = "corrupted data again"
+        val bundle = mock(Bundle()::class.java)
+        val error = "Corrupted data found"
 
         //WHEN
-        Mockito.`when`(repository.getConversionPair()).thenReturn(pair)
-        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
-            .thenReturn(responseObject)
+        Mockito.`when`(bundle.getString("parse_1")).thenReturn(currencyOne)
+        Mockito.`when`(bundle.getString("parse_2")).thenReturn(currencyTwo)
+        Mockito.`when`(helper.getDataFromApi(currencyOne, currencyTwo))
+            .doAnswer { throw IOException(error) }
 
         //THEN
-        viewModel.initiate(null)
+        viewModel.initiate(bundle)
         viewModel.operationStartedListener.observeOnce {
             assertEquals(true, it)
         }
         viewModel.operationFinishedListener.observeOnce {
-            assertEquals(true, it.first)
-            assertNull(it.second)
+            assertEquals(false, it.first)
+            assertEquals(it.second, error)
         }
     }
 

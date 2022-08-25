@@ -19,7 +19,6 @@ class PreferenceProvider @Inject constructor(@ApplicationContext context: Contex
 
     private val appContext = context.applicationContext
 
-    // Instance of Shared preferences
     private val preference: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(appContext)
 
@@ -28,7 +27,6 @@ class PreferenceProvider @Inject constructor(@ApplicationContext context: Contex
         context.resources.getStringArray(R.array.currency_arrays)[0]
     }
 
-    // Save currency pairs into prefs
     fun saveConversionPair(s1: String, s2: String) {
         preference.edit()
             .putString(CURRENCY_ONE, s1)
@@ -36,8 +34,6 @@ class PreferenceProvider @Inject constructor(@ApplicationContext context: Contex
             .apply()
     }
 
-    // Retrieve Currency pairs from prefs
-    // Returns Pairs
     fun getConversionPair(): Pair<String?, String?> {
         val fromString = getConversionString(CURRENCY_ONE)
         val toString = getConversionString(CURRENCY_TWO)
@@ -45,18 +41,15 @@ class PreferenceProvider @Inject constructor(@ApplicationContext context: Contex
         return Pair(fromString, toString)
     }
 
-
     private fun getConversionString(conversionName: String): String? {
         return preference
             .getString(conversionName, defaultRate)
     }
 
-    // Save currency pairs for widget
     fun saveWidgetConversionPair(
         fromString: String,
         toString: String, appWidgetId: Int
     ) {
-
         preference.edit()
             .putString("${appWidgetId}_$CURRENCY_ONE", fromString)
             .putString("${appWidgetId}_$CURRENCY_TWO", toString)
