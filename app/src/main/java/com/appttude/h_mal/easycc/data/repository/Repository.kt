@@ -1,16 +1,13 @@
 package com.appttude.h_mal.easycc.data.repository
 
-import com.appttude.h_mal.easycc.data.network.response.CurrencyResponse
-import com.appttude.h_mal.easycc.data.network.response.ResponseObject
+import com.appttude.h_mal.easycc.models.CurrencyModel
 
 /**
  * Main entry point for accessing currency data.
  */
 interface Repository {
 
-    suspend fun getDataFromApi(fromCurrency: String, toCurrency: String): ResponseObject
-
-    suspend fun getBackupDataFromApi(fromCurrency: String, toCurrency: String): CurrencyResponse
+    suspend fun getDataFromApi(fromCurrency: String, toCurrency: String): CurrencyModel
 
     fun getConversionPair(): Pair<String?, String?>
 

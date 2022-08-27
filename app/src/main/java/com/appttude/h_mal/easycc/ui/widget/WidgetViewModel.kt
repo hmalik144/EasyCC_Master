@@ -1,8 +1,7 @@
 package com.appttude.h_mal.easycc.ui.widget
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.appttude.h_mal.easycc.data.repository.Repository
+import com.appttude.h_mal.easycc.ui.BaseViewModel
 import com.appttude.h_mal.easycc.utils.trimToThree
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -10,7 +9,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WidgetViewModel @Inject constructor(
     private val repository: Repository
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val defaultCurrency: String by lazy { repository.getCurrenciesList()[0] }
     var appWidgetId: Int? = null
@@ -20,7 +19,6 @@ class WidgetViewModel @Inject constructor(
     var rateIdTo: String? = null
 
     // Live data to feedback to @CurrencyAppWidgetConfigureActivityKotlin
-    val operationFinishedListener = MutableLiveData<Pair<Boolean, String?>>()
 
     // Setup viewmodel app widget ID
     // Set default values for text views
@@ -43,15 +41,14 @@ class WidgetViewModel @Inject constructor(
 
     fun submitSelectionOnClick() {
         if (rateIdTo == null || rateIdFrom == null) {
-            operationFinishedListener.value = Pair(false, "Selections incomplete")
+            onError("Selections incomplete")
             return
         }
         if (rateIdFrom == rateIdTo) {
-            operationFinishedListener.value =
-                Pair(false, "Selected rates cannot be the same ${rateIdFrom}${rateIdTo}")
+            onError("Selected rates cannot be the same ${rateIdFrom}${rateIdTo}")
             return
         }
-        operationFinishedListener.value = Pair(true, null)
+        onSuccess(Unit)
     }
 
     fun setWidgetStored() {

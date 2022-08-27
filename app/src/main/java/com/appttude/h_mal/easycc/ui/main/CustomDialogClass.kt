@@ -9,7 +9,6 @@ import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-import androidx.appcompat.widget.SearchView
 import com.appttude.h_mal.easycc.R
 
 /**
@@ -18,7 +17,7 @@ import com.appttude.h_mal.easycc.R
 @Suppress("DEPRECATION")
 class CustomDialogClass(
     context: Context,
-    private val clickListener: ClickListener
+    val onSelect: (String) -> Unit
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,6 @@ class CustomDialogClass(
         // Keyboard not to overlap dialog
         window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        // array adapter for list of currencies in R.Strings
         val arrayAdapter =
             ArrayAdapter.createFromResource(
                 context, R.array.currency_arrays,
@@ -52,13 +50,8 @@ class CustomDialogClass(
 
         // interface selection back to calling activity
         list_view.setOnItemClickListener { adapterView, _, i, _ ->
-            clickListener.onText(adapterView.getItemAtPosition(i).toString())
+            onSelect.invoke(adapterView.getItemAtPosition(i).toString())
             dismiss()
         }
     }
-}
-
-// Interface to handle selection within dialog
-interface ClickListener {
-    fun onText(currencyName: String)
 }

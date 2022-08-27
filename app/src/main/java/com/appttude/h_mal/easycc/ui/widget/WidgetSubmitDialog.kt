@@ -3,8 +3,6 @@ package com.appttude.h_mal.easycc.ui.widget
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.appttude.h_mal.easycc.R
-import com.appttude.h_mal.easycc.databinding.ActivityMainBinding
 import com.appttude.h_mal.easycc.databinding.ConfirmDialogBinding
 
 
