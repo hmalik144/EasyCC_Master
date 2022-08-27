@@ -1,11 +1,13 @@
 package com.appttude.h_mal.easycc.repository
 
+import com.appttude.h_mal.easycc.data.network.SafeApiRequest
 import com.appttude.h_mal.easycc.data.network.api.BackupCurrencyApi
 import com.appttude.h_mal.easycc.data.network.api.CurrencyApi
 import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.prefs.PreferenceProvider
 import com.appttude.h_mal.easycc.data.repository.Repository
 import com.appttude.h_mal.easycc.data.repository.RepositoryImpl
+import com.appttude.h_mal.easycc.models.CurrencyModel
 import com.appttude.h_mal.easycc.utils.convertPairsListToString
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -22,7 +24,7 @@ import java.io.IOException
 import kotlin.test.assertFailsWith
 
 
-class RepositoryNetworkTest {
+class RepositoryNetworkTest : SafeApiRequest() {
 
     lateinit var repository: Repository
 
@@ -49,15 +51,16 @@ class RepositoryNetworkTest {
         //create a successful retrofit response
         val mockCurrencyResponse = mock(ResponseObject::class.java)
         val re = Response.success(mockCurrencyResponse)
+        val currencyModel = mock(CurrencyModel::class.java)
 
         //WHEN - loginApiRequest to return a successful response
         val currencyPair = convertPairsListToString(s1, s2)
         Mockito.`when`(api.getCurrencyRate(currencyPair)).thenReturn(re)
+        Mockito.`when`(responseUnwrap { api.getCurrencyRate(currencyPair) }.getCurrencyModel()).thenReturn(currencyModel)
 
         //THEN - the unwrapped login response contains the correct values
         val currencyResponse = repository.getDataFromApi(s1, s2)
-        assertNotNull(currencyResponse)
-        assertEquals(currencyResponse, mockCurrencyResponse)
+        assertEquals(currencyResponse, currencyModel)
     }
 
     @Test
@@ -74,6 +77,7 @@ class RepositoryNetworkTest {
         //WHEN
         val currencyPair = convertPairsListToString(s1, s2)
         Mockito.`when`(api.getCurrencyRate(currencyPair)).thenAnswer { re }
+        Mockito.`when`(apiBackup.getCurrencyRate(s1, s2)).thenAnswer { re }
 
         //THEN - assert exception is not null
         val ioExceptionReturned = assertFailsWith<IOException> {

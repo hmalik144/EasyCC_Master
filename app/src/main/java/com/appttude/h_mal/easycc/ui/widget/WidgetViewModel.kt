@@ -45,7 +45,7 @@ class WidgetViewModel @Inject constructor(
             return
         }
         if (rateIdFrom == rateIdTo) {
-            onError("Selected rates cannot be the same ${rateIdFrom}${rateIdTo}")
+            onError("Selected rates cannot be the same")
             return
         }
         onSuccess(Unit)

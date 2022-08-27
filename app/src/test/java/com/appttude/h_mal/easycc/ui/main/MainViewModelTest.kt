@@ -1,17 +1,17 @@
 package com.appttude.h_mal.easycc.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.repository.Repository
-import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
+import com.appttude.h_mal.easycc.models.CurrencyModel
+import com.appttude.h_mal.easycc.ui.BaseViewModelTest
 import com.appttude.h_mal.easycc.utils.MainCoroutineRule
 import com.appttude.h_mal.easycc.utils.observeOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,7 +22,7 @@ import org.mockito.MockitoAnnotations
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MainViewModelTest {
+class MainViewModelTest : BaseViewModelTest<MainViewModel>(){
 
     // Run tasks synchronously
     @get:Rule
@@ -31,27 +31,27 @@ class MainViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    lateinit var viewModel: MainViewModel
+    override lateinit var viewModel: MainViewModel
 
     @Mock
     lateinit var repository: Repository
 
-    @Mock
-    lateinit var helper: CurrencyDataHelper
+    private val currencyOne = "AUD - Australian Dollar"
+    private val currencyTwo = "GBP - British Pound"
 
     @Before
-    fun setUp() {
+    override fun setUp() {
         MockitoAnnotations.initMocks(this)
-        viewModel = MainViewModel(helper, repository)
+        viewModel = MainViewModel(repository)
+
+        super.setUp()
     }
 
     @Test
     fun initiate_validBundleValues_successResponse() = runBlocking {
         //GIVEN
-        val currencyOne = "AUD - Australian Dollar"
-        val currencyTwo = "GBP - British Pound"
         val bundle = mock(Bundle()::class.java)
-        val responseObject = mock(ResponseObject::class.java)
+        val responseObject = mock(CurrencyModel::class.java)
 
         //WHEN
         Mockito.`when`(bundle.getString("parse_1")).thenReturn(currencyOne)
@@ -61,59 +61,50 @@ class MainViewModelTest {
 
         //THEN
         viewModel.initiate(bundle)
-        viewModel.operationStartedListener.observeOnce {
-            assertEquals(true, it)
-        }
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(true, it.first)
-            assertNull(it.second)
+
+        dataPost.observeOnce {
+            assertEquals(it, responseObject)
         }
     }
 
     @Test
     fun initiate_invalidBundleValues_successfulResponse() = runBlocking {
         //GIVEN
-        val currencyOne = "corrupted data"
-        val currencyTwo = "corrupted data again"
         val bundle = mock(Bundle()::class.java)
         val error = "Corrupted data found"
 
         //WHEN
         Mockito.`when`(bundle.getString("parse_1")).thenReturn(currencyOne)
         Mockito.`when`(bundle.getString("parse_2")).thenReturn(currencyTwo)
-        Mockito.`when`(helper.getDataFromApi(currencyOne, currencyTwo))
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
             .doAnswer { throw IOException(error) }
 
         //THEN
         viewModel.initiate(bundle)
-        viewModel.operationStartedListener.observeOnce {
-            assertEquals(true, it)
-        }
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(false, it.first)
-            assertEquals(it.second, error)
+
+        errorPost.observeOnce {
+            assertEquals(error, it)
         }
     }
 
     @Test
     fun initiate_sameBundleValues_successfulResponse() = runBlocking {
         //GIVEN
-        val currencyOne = "AUD - Australian Dollar"
         val bundle = mock(Bundle()::class.java)
+        val responseObject = mock(CurrencyModel::class.java)
 
         //WHEN
         Mockito.`when`(bundle.getString("parse_1")).thenReturn(null)
         Mockito.`when`(bundle.getString("parse_2")).thenReturn(null)
         Mockito.`when`(repository.getConversionPair()).thenReturn(Pair(currencyOne, currencyOne))
+        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
+            .thenReturn(responseObject)
 
         //THEN
         viewModel.initiate(bundle)
-        viewModel.operationStartedListener.observeOnce {
-            assertEquals(true, it)
-        }
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(true, it.first)
-            assertNull(it.second)
+
+        dataPost.observeOnce {
+            assertEquals(responseObject, it)
         }
     }
 
@@ -129,12 +120,9 @@ class MainViewModelTest {
 
         //THEN
         viewModel.initiate(bundle)
-        viewModel.operationStartedListener.observeOnce {
-            assertEquals(true, it)
-        }
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(false, it.first)
-            assertEquals("Select currencies", it.second)
+
+        errorPost.observeOnce {
+            assertEquals("Select both currencies", it)
         }
     }
 
@@ -142,11 +130,9 @@ class MainViewModelTest {
     @Test
     fun setCurrencyName_validValues_successResponse() = runBlocking {
         //GIVEN
-        val currencyOne = "AUD - Australian Dollar"
-        val currencyTwo = "GBP - British Pound"
         viewModel.rateIdTo = currencyTwo
         val tag = "top"
-        val responseObject = mock(ResponseObject::class.java)
+        val responseObject = mock(CurrencyModel::class.java)
 
         //WHEN
         Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
@@ -154,24 +140,18 @@ class MainViewModelTest {
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)
-        viewModel.operationStartedListener.observeOnce {
-            assertEquals(true, it)
-        }
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(true, it.first)
-            Log.i("tag", "${it.first}  ${it.second}")
-            assertNull(it.second)
+
+        dataPost.observeOnce {
+            assertEquals(responseObject, it)
         }
     }
 
     @Test
     fun setCurrencyName_sameValues_successfulResponse() = runBlocking {
         //GIVEN
-        val currencyOne = "AUD - Australian Dollar"
-        val currencyTwo = "GBP - British Pound"
         viewModel.rateIdTo = currencyOne
         val tag = "top"
-        val responseObject = mock(ResponseObject::class.java)
+        val responseObject = mock(CurrencyModel::class.java)
 
         //WHEN
         Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
@@ -179,35 +159,27 @@ class MainViewModelTest {
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)
-        viewModel.operationStartedListener.observeOnce {
-            assertEquals(true, it)
-        }
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(true, it.first)
-            assertNull(it.second)
+        dataPost.observeOnce {
+            assertEquals(responseObject, it)
         }
     }
 
     @Test
     fun setCurrencyName_invalidValues_unsuccessfulResponse() = runBlocking {
         //GIVEN
-        val currencyOne = "AUD - Australian Dollar"
-        val currencyTwo = "GBP - British Pound"
+        val error = "Data is corrupted"
+        viewModel.rateIdTo = "corrupted"
         val tag = "top"
-        val responseObject = mock(ResponseObject::class.java)
+        val responseObject = mock(CurrencyModel::class.java)
 
         //WHEN
-        Mockito.`when`(repository.getDataFromApi(currencyOne, currencyTwo))
-            .thenReturn(responseObject)
+        Mockito.`when`(repository.getDataFromApi(currencyOne, "corrupted"))
+            .doAnswer { throw IOException(error) }
 
         //THEN
         viewModel.setCurrencyName(tag, currencyOne)
-        viewModel.operationStartedListener.observeOnce {
-            assertEquals(true, it)
-        }
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(false, it.first)
-            assertNotNull(it.second)
+        errorPost.observeOnce {
+            assertEquals(error, it)
         }
     }
 

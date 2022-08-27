@@ -2,6 +2,7 @@ package com.appttude.h_mal.easycc.ui.widget
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.appttude.h_mal.easycc.data.repository.Repository
+import com.appttude.h_mal.easycc.ui.BaseViewModelTest
 import com.appttude.h_mal.easycc.utils.observeOnce
 import org.junit.Assert.*
 import org.junit.Before
@@ -15,21 +16,23 @@ import org.mockito.MockitoAnnotations
 private const val currencyOne = "AUD - Australian Dollar"
 private const val currencyTwo = "GBP - British Pound"
 
-class WidgetViewModelTest {
+class WidgetViewModelTest : BaseViewModelTest<WidgetViewModel>(){
 
     // Run tasks synchronously
     @get:Rule
     val instantTaskExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
-    lateinit var viewModel: WidgetViewModel
+    override lateinit var viewModel: WidgetViewModel
 
     @Mock
     lateinit var repository: Repository
 
     @Before
-    fun setUp() {
+    override fun setUp() {
         MockitoAnnotations.initMocks(this)
         viewModel = WidgetViewModel(repository)
+
+        super.setUp()
     }
 
     @Test
@@ -75,7 +78,6 @@ class WidgetViewModelTest {
         //THEN
         val dialogResult = viewModel.getSubmitDialogMessage()
         assertEquals(dialogResult, "Create widget for AUDGBP?")
-
     }
 
     @Test
@@ -86,9 +88,9 @@ class WidgetViewModelTest {
 
         //THEN
         viewModel.submitSelectionOnClick()
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(it.first, true)
-            assertNull(it.second)
+
+        dataPost.observeOnce {
+            assert(it is Unit)
         }
     }
 
@@ -100,20 +102,23 @@ class WidgetViewModelTest {
 
         //THEN
         viewModel.submitSelectionOnClick()
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(it.first, false)
-            assertNotNull(it.second)
+
+        errorPost.observeOnce {
+            assertEquals("Selected rates cannot be the same", it)
         }
     }
 
     @Test
     fun submitSelectionOnClick_noInput_unsuccessfulResponse() {
+        //GIVEN
+        viewModel.rateIdFrom = null
+        viewModel.rateIdTo = null
 
         //THEN
         viewModel.submitSelectionOnClick()
-        viewModel.operationFinishedListener.observeOnce {
-            assertEquals(it.first, false)
-            assertNotNull(it.second)
+
+        errorPost.observeOnce {
+            assertEquals("Selections incomplete", it)
         }
     }
 }
