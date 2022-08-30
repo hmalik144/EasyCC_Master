@@ -1,17 +1,12 @@
 package com.appttude.h_mal.easycc.ui.main
 
 import android.os.Bundle
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appttude.h_mal.easycc.data.repository.Repository
-import com.appttude.h_mal.easycc.helper.CurrencyDataHelper
+import com.appttude.h_mal.easycc.ui.BaseViewModel
 import com.appttude.h_mal.easycc.utils.toTwoDpString
 import com.appttude.h_mal.easycc.utils.trimToThree
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -21,60 +16,48 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val currencyDataHelper: CurrencyDataHelper,
     private val repository: Repository
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val conversionPairs by lazy { repository.getConversionPair() }
 
-    // Viewbinding to textviews in @activity_main.xml
+    // Viewbinded variables
     var rateIdFrom: String? = null
     var rateIdTo: String? = null
-
-    //operation results livedata based on outcome of operation
-    val operationStartedListener = MutableLiveData<Boolean>()
-    val operationFinishedListener = MutableLiveData<Pair<Boolean, String?>>()
 
     private var conversionRate: Double = 1.00
 
     private fun getExchangeRate() {
-        operationStartedListener.postValue(true)
-
-        // view binded exchange rates selected null checked
+        onStart()
         if (rateIdFrom.isNullOrEmpty() || rateIdTo.isNullOrEmpty()) {
-            operationFinishedListener.postValue(Pair(false, "Select currencies"))
+            onError("Select both currencies")
             return
         }
 
-        // No need to call api as it will return exchange rate as 1
         if (rateIdFrom == rateIdTo) {
             conversionRate = 1.00
-            operationFinishedListener.postValue(Pair(true, null))
+            onError("Currency selections are the same")
             return
         }
 
         viewModelScope.launch {
             try {
                 // Non-null assertion (!!) as values have been null checked and have not changed
-                val exchangeResponse = currencyDataHelper.getDataFromApi(
+                val exchangeResponse = repository.getDataFromApi(
                     rateIdFrom!!.trimToThree(),
                     rateIdTo!!.trimToThree()
                 )
 
-                exchangeResponse.getCurrencyModel().let {
+                exchangeResponse.let {
                     conversionRate = it.rate
                     repository.setConversionPair(rateIdFrom!!, rateIdTo!!)
 
-                    operationFinishedListener.postValue(Pair(true, null))
+                    onSuccess(it)
                     return@launch
                 }
             } catch (e: IOException) {
-                e.message?.let {
-                    operationFinishedListener.postValue(Pair(false, it))
-                    return@launch
-                }
+                e.message?.let { onError(it) }
             }
-            operationFinishedListener.postValue(Pair(false, "Failed to retrieve rate"))
         }
     }
 

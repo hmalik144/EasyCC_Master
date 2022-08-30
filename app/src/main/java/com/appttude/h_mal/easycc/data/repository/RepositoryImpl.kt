@@ -5,10 +5,10 @@ import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.data.network.SafeApiRequest
 import com.appttude.h_mal.easycc.data.network.api.BackupCurrencyApi
 import com.appttude.h_mal.easycc.data.network.api.CurrencyApi
-import com.appttude.h_mal.easycc.data.network.response.CurrencyResponse
-import com.appttude.h_mal.easycc.data.network.response.ResponseObject
 import com.appttude.h_mal.easycc.data.prefs.PreferenceProvider
+import com.appttude.h_mal.easycc.models.CurrencyModel
 import com.appttude.h_mal.easycc.utils.convertPairsListToString
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -23,17 +23,19 @@ class RepositoryImpl @Inject constructor(
     override suspend fun getDataFromApi(
         fromCurrency: String,
         toCurrency: String
-    ): ResponseObject {
-        // Set currency pairs as correct string for api query eg. AUD_GBP
-        val currencyPair = convertPairsListToString(fromCurrency, toCurrency)
-        return responseUnwrap { api.getCurrencyRate(currencyPair) }
-    }
-
-    override suspend fun getBackupDataFromApi(
-        fromCurrency: String,
-        toCurrency: String
-    ): CurrencyResponse {
-        return responseUnwrap { backUpApi.getCurrencyRate(fromCurrency, toCurrency) }
+    ): CurrencyModel {
+        return try {
+            // Set currency pairs as correct string for api query eg. AUD_GBP
+            val currencyPair = convertPairsListToString(fromCurrency, toCurrency)
+            responseUnwrap { api.getCurrencyRate(currencyPair) }.getCurrencyModel()
+        } catch (e: IOException) {
+            responseUnwrap {
+                backUpApi.getCurrencyRate(
+                    fromCurrency,
+                    toCurrency
+                )
+            }.getCurrencyModel()
+        }
     }
 
     override fun getConversionPair(): Pair<String?, String?> {

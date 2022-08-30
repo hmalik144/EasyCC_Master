@@ -7,18 +7,16 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.appttude.h_mal.easycc.R
 import com.appttude.h_mal.easycc.databinding.ActivityMainBinding
+import com.appttude.h_mal.easycc.models.CurrencyModel
+import com.appttude.h_mal.easycc.ui.BaseActivity
 import com.appttude.h_mal.easycc.utils.clearEditText
-import com.appttude.h_mal.easycc.utils.displayToast
-import com.appttude.h_mal.easycc.utils.hideView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : BaseActivity<MainViewModel>(), View.OnClickListener {
 
-    private val viewModel: MainViewModel by viewModels()
+    override val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,34 +27,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
          * Prevent keyboard overlapping views
          */
         window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         )
 
         viewModel.initiate(intent.extras)
 
-        binding.currencyOne.text = viewModel.rateIdTo
-        binding.currencyTwo.text  = viewModel.rateIdFrom
+        binding.currencyOne.text = viewModel.rateIdFrom
+        binding.currencyTwo.text = viewModel.rateIdTo
 
         setUpListeners()
-        setUpObservers()
     }
 
-    private fun setUpObservers() {
-        viewModel.operationStartedListener.observe(this) {
-            binding.progressBar.hideView(false)
-        }
-        viewModel.operationFinishedListener.observe(this) { pair ->
-            // hide progress bar
-            binding.progressBar.hideView(true)
-            if (pair.first) {
-                // Operation was successful remove text in EditTexts
-                binding.bottomInsertValues.clearEditText()
-                binding.topInsertValue.clearEditText()
-            } else {
-                // Display Toast with error message returned from Viewmodel
-                pair.second?.let { displayToast(it) }
-            }
+    override fun onSuccess(data: Any?) {
+        super.onSuccess(data)
+        if (data is CurrencyModel) {
+            binding.bottomInsertValues.clearEditText()
+            binding.topInsertValue.clearEditText()
         }
     }
 
@@ -69,25 +55,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showCustomDialog(view: View?) {
-        CustomDialogClass(this, object : ClickListener {
-            override fun onText(currencyName: String) {
-                (view as TextView).text = currencyName
-                viewModel.setCurrencyName(view.tag, currencyName)
-            }
-
-        }).show()
+        CustomDialogClass(this) {
+            (view as TextView).text = it
+            viewModel.setCurrencyName(view.tag, it)
+        }.show()
     }
 
     override fun onClick(view: View?) {
         showCustomDialog(view)
     }
 
-    // Text watcher applied to EditText @topInsertValue
     private val textWatcherClass: TextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
             // Remove text watcher on other text watcher to prevent infinite loop
             binding.bottomInsertValues.removeTextChangedListener(textWatcherClass2)
-            // Clear any values if current EditText is empty
+
             if (binding.topInsertValue.text.isNullOrEmpty())
                 binding.bottomInsertValues.setText("")
         }
@@ -102,7 +84,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private val textWatcherClass2: TextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
-
             binding.topInsertValue.removeTextChangedListener(textWatcherClass)
             if (binding.bottomInsertValues.text.isNullOrEmpty())
                 binding.topInsertValue.clearEditText()
@@ -114,5 +95,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.topInsertValue.addTextChangedListener(textWatcherClass)
         }
     }
+
 
 }

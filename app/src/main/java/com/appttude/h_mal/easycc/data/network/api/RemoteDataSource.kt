@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
-class RemoteDataSource @Inject constructor(){
+class RemoteDataSource @Inject constructor() {
 
     fun <Api> buildApi(
         okkHttpclient: OkHttpClient,

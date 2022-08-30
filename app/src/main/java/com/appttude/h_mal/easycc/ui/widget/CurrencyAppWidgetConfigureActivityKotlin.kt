@@ -7,11 +7,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.appttude.h_mal.easycc.databinding.CurrencyAppWidgetConfigureBinding
-import com.appttude.h_mal.easycc.ui.main.ClickListener
+import com.appttude.h_mal.easycc.ui.BaseActivity
 import com.appttude.h_mal.easycc.ui.main.CustomDialogClass
-import com.appttude.h_mal.easycc.utils.displayToast
 import com.appttude.h_mal.easycc.utils.transformIntToArray
 import com.appttude.h_mal.easycc.widget.CurrencyAppWidgetKotlin
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,16 +18,16 @@ import dagger.hilt.android.AndroidEntryPoint
  * The configuration screen for the [CurrencyAppWidgetKotlin] AppWidget.
  */
 @AndroidEntryPoint
-class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(),
+class CurrencyAppWidgetConfigureActivityKotlin : BaseActivity<WidgetViewModel>(),
     View.OnClickListener {
 
-    val viewModel: WidgetViewModel by viewModels()
+    override val viewModel: WidgetViewModel by viewModels()
 
     private lateinit var binding: CurrencyAppWidgetConfigureBinding
     private var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
-    public override fun onCreate(icicle: Bundle?) {
-        super.onCreate(icicle)
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         binding = CurrencyAppWidgetConfigureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -50,10 +48,8 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(),
             finish()
             return
         }
-
         viewModel.initiate(mAppWidgetId)
 
-        setupObserver()
         setupClickListener()
     }
 
@@ -63,17 +59,9 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(),
         binding.currencyTwo.setOnClickListener(this)
     }
 
-    private fun setupObserver() {
-        viewModel.operationFinishedListener.observe(this) {
-
-            // it.first is a the success of the operation
-            if (it.first) {
-                displaySubmitDialog()
-            } else {
-                // failed operation - display toast with message from it.second
-                it.second?.let { message -> displayToast(message) }
-            }
-        }
+    override fun onSuccess(data: Any?) {
+        super.onSuccess(data)
+        displaySubmitDialog()
     }
 
     override fun onClick(view: View?) {
@@ -98,12 +86,10 @@ class CurrencyAppWidgetConfigureActivityKotlin : AppCompatActivity(),
 
 
     private fun showCustomDialog(view: View?) {
-        CustomDialogClass(this, object : ClickListener {
-            override fun onText(currencyName: String) {
-                (view as TextView).text = currencyName
-                viewModel.setCurrencyName(view.tag, currencyName)
-            }
-        }).show()
+        CustomDialogClass(this) {
+            (view as TextView).text = it
+            viewModel.setCurrencyName(view.tag, it)
+        }.show()
     }
 
     fun finishCurrencyWidgetActivity() {

@@ -6,7 +6,6 @@ import com.appttude.h_mal.easycc.utils.trimToThree
 import javax.inject.Inject
 
 class WidgetHelper @Inject constructor(
-    private val helper: CurrencyDataHelper,
     val repository: Repository
 ) {
 
@@ -16,7 +15,7 @@ class WidgetHelper @Inject constructor(
             val s1 = pair.first?.trimToThree() ?: return null
             val s2 = pair.second?.trimToThree() ?: return null
 
-            return helper.getDataFromApi(s1, s2).getCurrencyModel()
+            return repository.getDataFromApi(s1, s2)
         } catch (e: Exception) {
             e.printStackTrace()
             return null
