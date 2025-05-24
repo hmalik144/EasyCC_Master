@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.dagger.hilt.android'
-    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 Properties properties = new Properties()
@@ -18,8 +18,8 @@ android {
         applicationId "com.appttude.h_mal.easycc"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 5
-        versionName "4.1"
+        versionCode 12
+        versionName "7.0.0"
 
         testInstrumentationRunner "com.appttude.h_mal.easycc.application.TestRunner"
     }
@@ -33,6 +33,7 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -47,11 +48,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     buildFeatures {
         viewBinding true
+    }
+
+    kotlin {
+        jvmToolchain(17)
     }
 
 //    java {
@@ -92,9 +94,9 @@ dependencies {
 
     // Hilt dependency injection
     implementation "com.google.dagger:hilt-android:$HILT_VERSION"
-    kapt "com.google.dagger:hilt-compiler:$HILT_VERSION"
+    ksp "com.google.dagger:hilt-compiler:$HILT_VERSION"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$HILT_VERSION"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$HILT_VERSION"
+    kspAndroidTest "com.google.dagger:hilt-android-compiler:$HILT_VERSION"
 
     //mockito and livedata testing
     testImplementation "org.mockito:mockito-core:$MOKITO_CORE_VERSION"

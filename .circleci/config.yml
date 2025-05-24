@@ -7,8 +7,71 @@ version: 2.1
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 # See: https://circleci.com/docs/2.0/orb-intro/
 orbs:
-  android: circleci/android@1.0.3
+  android: circleci/android@2.3.0
 
+commands:
+  setup_repo:
+    description: checkout repo and android dependencies
+    steps:
+      - checkout
+      - run:
+          name: Give gradle permissions
+          command: |
+            sudo chmod +x ./gradlew
+      - android/restore-gradle-cache
+  run_tests:
+    description: run unit tests
+    steps:
+      # The next step will run the unit tests
+      - run:
+          name: Run Tests
+          command: bundle exec fastlane unit_test
+      - store_artifacts:
+          path: app/build/reports
+          destination: reports
+      - store_test_results:
+          path: app/build/test-results
+  run_ui_tests:
+    description: run tests for flavour specified
+    steps:
+      - android/start-emulator-and-run-tests:
+          post-emulator-launch-assemble-command: ./gradlew installDebugAndroid
+          test-command: ./gradlew connectedDebugAndroidTest --continue
+          system-image: system-images;android-26;google_apis;x86
+      # store screenshots for failed ui tests
+      - when:
+          condition: on_fail
+          steps:
+            - store_artifacts:
+                path: app/build/outputs/connected_android_test_additional_output/debugAndroidTest/connected
+                destination: connected_android_test
+      # store test reports
+      - store_artifacts:
+          path: app/build/reports/androidTests/connected
+          destination: reports
+      - store_test_results:
+          path: app/build/outputs/androidTest-results/connected
+  deploy_to_play_store:
+    description: deploy to playstore based on flavour
+    parameters:
+      flavour:
+        type: string
+        default: "AtlasWeather"
+    steps:
+      # The next step will run the unit tests
+      - android/decode-keystore:
+          keystore-location: "./app/keystore.jks"
+      - run:
+          name: Setup playstore key
+          command: |
+            echo "$GOOGLE_PLAY_KEY" > "google-play-key.json"
+      - run:
+          name: Run fastlane command to deploy to playstore
+          command: |
+            pwd
+            bundle exec fastlane deploy
+      - store_test_results:
+          path: fastlane/report.xml
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -18,36 +81,53 @@ jobs:
     # See: https://circleci.com/docs/2.0/executor-types/
     executor:
       name: android/android-machine
-
+      tag: 2023.05.1
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
-      - checkout
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Chmod permissions
-          command: sudo chmod +x ./gradlew
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Run Tests
-          command: ./gradlew lint test
-      - store_artifacts:
-          path: app/build/reports
-          destination: reports
-      - store_test_results:
-          path: app/build/test-results
+      - setup_repo
+      - run_tests
+  run_instrumentation_test:
+    # These next lines define the Android machine image executor.
+    # See: https://circleci.com/docs/2.0/executor-types/
+    executor:
+      name: android/android-machine
+      tag: 2023.05.1
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - setup_repo
+      - run_ui_tests
+  deploy-to-playstore:
+    docker:
+      - image: cimg/android:2023.07-browsers
+        auth:
+          username: ${DOCKER_USERNAME}
+          password: ${DOCKER_PASSWORD}
+    steps:
+      - setup_repo
+      - deploy_to_play_store
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  version: 2
+  build-release-mono:
     jobs:
-      - build-and-test
+      - build-and-test:
+          context: appttude
+      - run_instrumentation_test:
+          context: appttude
+          filters:
+            branches:
+              only:
+                - master
+                - '^deploy.*'
+      - deploy-to-playstore:
+          context: appttude
+          filters:
+            branches:
+              only:
+                - '^deploy.*'
+          requires:
+            - run_instrumentation_test

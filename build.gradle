@@ -1,12 +1,13 @@
 buildscript {
     ext {
-        agp_version = '8.1.0'
+        agp_version = "$GRADLE_PLUGIN_VERSION"
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id 'com.android.application' version "$GRADLE_PLUGIN_VERSION" apply false
     id 'com.android.library' version "$GRADLE_PLUGIN_VERSION" apply false
     id 'org.jetbrains.kotlin.android' version "$KOTLIN_VERSION" apply false
+    id 'com.google.devtools.ksp' version "$KOTLIN_VERSION-1.0.29"
     id 'com.google.dagger.hilt.android' version "$HILT_VERSION" apply false
     id 'com.autonomousapps.dependency-analysis' version "$GRADLE_ANALYZE_VERSION"
 }
